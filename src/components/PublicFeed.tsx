@@ -36,33 +36,43 @@ export function PublicFeed({ creatorSlug }: { creatorSlug: string }) {
     };
   }, [creatorSlug]);
 
-  if (!entries) {
-    return <p className="text-sm text-neutral-400">Loading supporters…</p>;
-  }
-
-  if (entries.length === 0) {
-    return (
-      <p className="text-sm text-neutral-400">No supporters yet — be the first.</p>
-    );
-  }
-
   return (
     <div className="space-y-3">
-      <p className="text-xs uppercase tracking-wide text-neutral-400">
-        Recent supporters — self-reported, not payment-verified
+      <p className="font-receipt text-[10px] tracking-[0.25em] uppercase text-muted text-center">
+        · recent support ·
       </p>
-      <ul className="space-y-2">
-        {entries.map((e) => (
-          <li
-            key={e.id}
-            className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-3 text-sm"
-          >
-            <span className="font-medium">{e.display_name}</span>{" "}
-            <span className="text-neutral-500">bought {e.tier_label}</span>
-            {e.note && <p className="mt-1 text-neutral-600 dark:text-neutral-300">{e.note}</p>}
-          </li>
-        ))}
-      </ul>
+
+      {!entries && (
+        <p className="font-receipt text-xs text-muted text-center py-6">loading…</p>
+      )}
+
+      {entries?.length === 0 && (
+        <p className="font-receipt text-xs text-muted text-center py-6">
+          no supporters yet — be the first
+        </p>
+      )}
+
+      {entries && entries.length > 0 && (
+        <div className="rounded-lg border-2 border-rule bg-paper-raised overflow-hidden">
+          {entries.map((e, i) => (
+            <div key={e.id}>
+              {i > 0 && <hr className="tear-line" style={{ ["--notch-bg" as string]: "var(--paper-raised)" }} />}
+              <div className="px-4 py-3 flex items-baseline justify-between gap-3">
+                <div className="min-w-0">
+                  <span className="text-ink">{e.display_name}</span>{" "}
+                  <span className="text-muted text-sm">bought {e.tier_label}</span>
+                  {e.note && <p className="mt-1 text-sm text-muted italic truncate">&ldquo;{e.note}&rdquo;</p>}
+                </div>
+                <span className="font-receipt text-xs text-stamp shrink-0">claimed*</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <p className="font-receipt text-[10px] text-muted/70 text-center">
+        * self-reported by the supporter, not payment-verified
+      </p>
     </div>
   );
 }

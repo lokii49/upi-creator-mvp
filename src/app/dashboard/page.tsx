@@ -8,12 +8,18 @@ import { isValidVpa, type Creator, type Tier } from "@/lib/creators";
 import { AuthGate } from "@/components/AuthGate";
 import { VpaField } from "@/components/VpaField";
 import { TierEditor } from "@/components/TierEditor";
+import { inputClass, primaryButtonClass, eyebrowClass } from "@/lib/ui";
 
 export default function DashboardPage() {
   return (
-    <main className="mx-auto max-w-md px-4 py-10 space-y-6">
-      <h1 className="text-xl font-semibold">Manage your page</h1>
-      <AuthGate redirectPath="/dashboard">{(user) => <CreatorPicker user={user} />}</AuthGate>
+    <main className="min-h-screen paper-texture flex items-start justify-center">
+      <div className="w-full max-w-md px-4 py-14 space-y-6">
+        <div className="text-center space-y-1.5">
+          <p className={eyebrowClass}>account</p>
+          <h1 className="font-display text-4xl text-ink">Manage your page</h1>
+        </div>
+        <AuthGate redirectPath="/dashboard">{(user) => <CreatorPicker user={user} />}</AuthGate>
+      </div>
     </main>
   );
 }
@@ -38,13 +44,13 @@ function CreatorPicker({ user }: { user: User }) {
       });
   }, [user.id]);
 
-  if (!creators) return <p className="text-sm text-neutral-500">Loading…</p>;
+  if (!creators) return <p className="font-receipt text-xs text-muted text-center">loading…</p>;
 
   if (creators.length === 0) {
     return (
-      <div className="space-y-3 text-sm">
-        <p className="text-neutral-500">No page yet for this email.</p>
-        <Link href="/register" className="underline">
+      <div className="space-y-3 text-sm text-center">
+        <p className="text-muted">No page yet for this email.</p>
+        <Link href="/register" className="text-ink underline">
           Create one
         </Link>
       </div>
@@ -53,10 +59,10 @@ function CreatorPicker({ user }: { user: User }) {
 
   if (creators.length > 1 && !selected) {
     return (
-      <ul className="space-y-2">
+      <ul className="space-y-2 rounded-lg border-2 border-rule bg-paper-raised p-4">
         {creators.map((c) => (
           <li key={c.slug}>
-            <button onClick={() => setSelected(c.slug)} className="underline text-sm">
+            <button onClick={() => setSelected(c.slug)} className="text-sm text-ink underline">
               {c.name} — support.tinyact.app/{c.slug}
             </button>
           </li>
@@ -107,10 +113,13 @@ function EditForm({ creator }: { creator: Creator }) {
   }
 
   return (
-    <form onSubmit={save} className="space-y-3">
-      <p className="text-xs text-neutral-500">
+    <form
+      onSubmit={save}
+      className="space-y-4 rounded-lg border-2 border-rule bg-paper-raised p-5"
+    >
+      <p className="font-receipt text-xs text-muted">
         support.tinyact.app/{creator.slug}{" "}
-        <Link href={`/${creator.slug}`} className="underline">
+        <Link href={`/${creator.slug}`} className="text-ink underline">
           view page
         </Link>
       </p>
@@ -119,25 +128,21 @@ function EditForm({ creator }: { creator: Creator }) {
         placeholder="Display name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+        className={inputClass}
       />
       <textarea
         placeholder="Short bio (optional)"
         value={bio}
         onChange={(e) => setBio(e.target.value)}
         rows={2}
-        className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+        className={inputClass}
       />
       <VpaField value={vpa} onChange={setVpa} />
       <TierEditor tiers={tiers} onChange={setTiers} />
 
       {error && <p className="text-sm text-red-600">{error}</p>}
-      {saved && <p className="text-sm text-green-600">Saved.</p>}
-      <button
-        type="submit"
-        disabled={busy}
-        className="w-full rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 py-2 text-sm font-medium disabled:opacity-50"
-      >
+      {saved && <p className="text-sm text-stamp">Saved.</p>}
+      <button type="submit" disabled={busy} className={primaryButtonClass}>
         {busy ? "Saving…" : "Save changes"}
       </button>
     </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import type { Tier } from "@/lib/creators";
+import { eyebrowClass } from "@/lib/ui";
 
 export function TierEditor({
   tiers,
@@ -23,14 +24,14 @@ export function TierEditor({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs text-neutral-500">Support tiers</p>
+      <p className={eyebrowClass}>Support tiers</p>
       {tiers.map((t, i) => (
         <div key={i} className="flex gap-2">
           <input
             placeholder="Label (e.g. 1 coffee)"
             value={t.label}
             onChange={(e) => updateTier(i, { label: e.target.value })}
-            className="flex-1 rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-2 py-1.5 text-sm"
+            className="flex-1 rounded-md border border-rule bg-paper-raised px-2 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-ink"
           />
           <input
             type="number"
@@ -38,20 +39,20 @@ export function TierEditor({
             placeholder="₹"
             value={t.amount || ""}
             onChange={(e) => updateTier(i, { amount: Number(e.target.value) })}
-            className="w-20 rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-2 py-1.5 text-sm"
+            className="w-20 rounded-md border border-rule bg-paper-raised px-2 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-ink font-receipt"
           />
           {tiers.length > 1 && (
             <button
               type="button"
               onClick={() => removeTier(i)}
-              className="px-2 text-sm text-neutral-400"
+              className="px-2 text-sm text-muted hover:text-ink"
             >
               ✕
             </button>
           )}
         </div>
       ))}
-      <button type="button" onClick={addTier} className="text-sm text-neutral-500 underline">
+      <button type="button" onClick={addTier} className="text-sm text-muted underline hover:text-ink">
         + add tier
       </button>
     </div>

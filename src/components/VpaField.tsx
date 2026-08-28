@@ -1,6 +1,7 @@
 "use client";
 
 import { isValidVpa } from "@/lib/creators";
+import { inputClass } from "@/lib/ui";
 
 export function VpaField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
@@ -23,15 +24,13 @@ export function VpaField({ value, onChange }: { value: string; onChange: (v: str
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck={false}
-        className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+        className={`${inputClass} font-receipt`}
       />
       {value && (
         <p
-          className={`mt-1 text-xs ${
-            isValidVpa(value) ? "text-neutral-500" : "text-amber-600 dark:text-amber-400"
-          }`}
+          className={`mt-1 text-xs ${isValidVpa(value) ? "text-muted" : "text-marigold-ink"}`}
         >
-          Payments will go to: <span className="font-mono">{value}</span> — double-check
+          Payments will go to: <span className="font-receipt">{value}</span> — double-check
           this is exactly right, it isn&apos;t verified anywhere.
         </p>
       )}

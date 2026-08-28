@@ -8,12 +8,18 @@ import { isValidSlug, isValidVpa, type Tier } from "@/lib/creators";
 import { AuthGate } from "@/components/AuthGate";
 import { VpaField } from "@/components/VpaField";
 import { TierEditor } from "@/components/TierEditor";
+import { inputClass, primaryButtonClass, eyebrowClass } from "@/lib/ui";
 
 export default function RegisterPage() {
   return (
-    <main className="mx-auto max-w-md px-4 py-10 space-y-6">
-      <h1 className="text-xl font-semibold">Create your support page</h1>
-      <AuthGate redirectPath="/register">{(user) => <ProfileForm user={user} />}</AuthGate>
+    <main className="min-h-screen paper-texture flex items-start justify-center">
+      <div className="w-full max-w-md px-4 py-14 space-y-6">
+        <div className="text-center space-y-1.5">
+          <p className={eyebrowClass}>new page</p>
+          <h1 className="font-display text-4xl text-ink">Create your support page</h1>
+        </div>
+        <AuthGate redirectPath="/register">{(user) => <ProfileForm user={user} />}</AuthGate>
+      </div>
     </main>
   );
 }
@@ -72,16 +78,19 @@ function ProfileForm({ user }: { user: User }) {
   }
 
   return (
-    <form onSubmit={createPage} className="space-y-3">
+    <form
+      onSubmit={createPage}
+      className="space-y-4 rounded-lg border-2 border-rule bg-paper-raised p-5"
+    >
       <div>
-        <label className="text-xs text-neutral-500">
+        <label className="text-xs text-muted">
           Your page: support.tinyact.app/
           <input
             required
             placeholder="yourname"
             value={slug}
             onChange={(e) => setSlug(e.target.value.toLowerCase())}
-            className="inline w-40 rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-2 py-1 text-sm"
+            className="inline w-40 rounded-md border border-rule bg-paper px-2 py-1 text-sm text-ink focus:outline-none focus:border-ink font-receipt"
           />
         </label>
       </div>
@@ -90,24 +99,20 @@ function ProfileForm({ user }: { user: User }) {
         placeholder="Display name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+        className={inputClass}
       />
       <textarea
         placeholder="Short bio (optional)"
         value={bio}
         onChange={(e) => setBio(e.target.value)}
         rows={2}
-        className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+        className={inputClass}
       />
       <VpaField value={vpa} onChange={setVpa} />
       <TierEditor tiers={tiers} onChange={setTiers} />
 
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <button
-        type="submit"
-        disabled={busy}
-        className="w-full rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 py-2 text-sm font-medium disabled:opacity-50"
-      >
+      <button type="submit" disabled={busy} className={primaryButtonClass}>
         {busy ? "Creating…" : "Create my page"}
       </button>
     </form>

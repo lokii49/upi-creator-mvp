@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
+/*
+  Design language: a UPI payment receipt / chai-stall token. This product
+  is literally about who paid what to whom — so the visual vocabulary
+  leans on India's own paper trail for that: perforated ticket stubs,
+  dotted tear-lines, a running receipt tape for the supporter feed,
+  a stamped mark for confirmation. Not a generic SaaS card grid.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #1a1a2e;
+  --paper: #faf6ee;
+  --paper-raised: #f3ecdc;
+  --marigold: #e08a1e;
+  --marigold-ink: #7a4c0f;
+  --stamp: #2f6e4f;
+  --rule: #d8cdb8;
+  --muted: #7a7568;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-marigold: var(--marigold);
+  --color-marigold-ink: var(--marigold-ink);
+  --color-stamp: var(--stamp);
+  --color-rule: var(--rule);
+  --color-muted: var(--muted);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-receipt: var(--font-receipt);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* Dotted tear-line, like the perforation on a ticket or receipt roll. */
+.tear-line {
+  border: none;
+  border-top: 2px dotted var(--rule);
+}
+
+/* Ticket-stub notches: two half-circles cut from the left/right edges of
+   a divider, matching the surrounding surface color so they read as
+   punched holes rather than decoration. `--notch-bg` lets a caller
+   override the surface color the notch should blend into. */
+.ticket-notch {
+  position: relative;
+}
+.ticket-notch::before,
+.ticket-notch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--notch-bg, var(--paper));
+  transform: translateY(-50%);
+}
+.ticket-notch::before {
+  left: -7px;
+}
+.ticket-notch::after {
+  right: -7px;
+}
+
+/* Faint paper grain so flat color doesn't read as a plain CSS box. */
+.paper-texture {
+  background-image: radial-gradient(circle at 1px 1px, rgba(26, 26, 46, 0.035) 1px, transparent 0);
+  background-size: 14px 14px;
 }
