@@ -10,13 +10,12 @@ import type QRCodeStyling from "qr-code-styling";
 const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#14b8a6"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)"/><text x="32" y="44" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="800" fill="white" text-anchor="middle">₹</text></svg>`;
 const LOGO_DATA_URI = `data:image/svg+xml;utf8,${encodeURIComponent(LOGO_SVG)}`;
 
-// Gradient dot-matrix (circular dots, not rounded squares — reads
-// cleaner/more polished at a glance) for a distinctive look, but the
-// three finder squares (the big corner markers a scanner locks onto
-// first) stay solid near-black — those are the one part of a "cute" QR
-// that must never go gradient/light, or real-world scanning gets
-// unreliable. errorCorrectionLevel "H" (~30% obstruction budget) covers
-// the center logo with real margin to spare.
+// Solid on-brand indigo dot-matrix — dropped the two-tone gradient
+// (indigo->teal), which read muddy at real dot size instead of crisp.
+// Finder squares still stay solid near-black, not the accent color:
+// they're the part a scanner locks onto first, and near-black holds
+// more contrast than a mid-tone indigo would. errorCorrectionLevel "H"
+// (~30% obstruction budget) covers the center logo with margin to spare.
 export function QrCode({ uri, size = 240 }: { uri: string; size?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const qrRef = useRef<QRCodeStyling | null>(null);
@@ -35,17 +34,7 @@ export function QrCode({ uri, size = 240 }: { uri: string; size?: number }) {
           data: uri,
           margin: 8,
           qrOptions: { errorCorrectionLevel: "H" },
-          dotsOptions: {
-            type: "dots",
-            gradient: {
-              type: "linear",
-              rotation: Math.PI / 4,
-              colorStops: [
-                { offset: 0, color: "#6366f1" },
-                { offset: 1, color: "#14b8a6" },
-              ],
-            },
-          },
+          dotsOptions: { type: "dots", color: "#6366f1" },
           cornersSquareOptions: { type: "extra-rounded", color: "#0b0f19" },
           cornersDotOptions: { type: "dot", color: "#0b0f19" },
           backgroundOptions: { color: "#ffffff" },
