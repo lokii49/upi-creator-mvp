@@ -30,32 +30,28 @@ export default async function CreatorPage({
   if (!creator) notFound();
 
   return (
-    <main className="min-h-screen paper-texture">
-      <div className="mx-auto max-w-lg px-4 py-14 space-y-12">
-        <header className="flex flex-col items-center gap-4 text-center">
+    <main className="min-h-screen bg-yellow">
+      <div className="mx-auto max-w-lg px-4 py-14 space-y-8">
+        <header className="flex flex-col items-center gap-3 text-center">
           <div
             aria-hidden
-            className="flex items-center justify-center rounded-full bg-paper-raised border border-rule text-3xl font-display text-ink"
-            style={{ height: 92, width: 92 }}
+            className="flex items-center justify-center rounded-full bg-card border-2 border-ink shadow-pop-lg text-4xl font-display font-semibold text-ink"
+            style={{ height: 100, width: 100 }}
           >
             {creator.name.charAt(0)}
           </div>
-          <div className="space-y-1.5">
-            <p className="font-receipt text-[11px] tracking-[0.25em] uppercase text-muted">
-              accepting support via UPI
-            </p>
-            <h1 className="font-display text-5xl leading-none text-ink">{creator.name}</h1>
-            {creator.bio && <p className="text-sm text-muted max-w-xs mx-auto">{creator.bio}</p>}
+          <div className="space-y-1">
+            <h1 className="font-display text-4xl font-semibold text-ink">{creator.name}</h1>
+            {creator.bio && <p className="text-sm text-ink/70 max-w-xs mx-auto">{creator.bio}</p>}
           </div>
         </header>
 
-        <PayPanel creator={creator} />
-
-        <section>
+        <div className="rounded-3xl bg-cream border-2 border-ink shadow-pop-lg p-6 space-y-8">
+          <PayPanel creator={creator} />
           <PublicFeed creatorSlug={creator.slug} />
-        </section>
+        </div>
 
-        <footer className="text-center font-receipt text-[11px] text-muted pt-4 leading-relaxed">
+        <footer className="text-center text-xs text-ink/60 pt-2 leading-relaxed">
           Payments go directly to {creator.name}&apos;s own UPI ID.
           <br />
           This page never touches your money — it only helps them know who supported them.

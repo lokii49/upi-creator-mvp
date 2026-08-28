@@ -52,7 +52,7 @@ function PayPanelInner({
     QRCode.toDataURL(uri, {
       margin: 1,
       width: 220,
-      color: { dark: "#1a1a2e", light: "#faf6ee" },
+      color: { dark: "#172026", light: "#ffffff" },
     }).then((url) => {
       if (!cancelled) setQrDataUrl(url);
     });
@@ -73,10 +73,10 @@ function PayPanelInner({
   const vpaMissing = !creator.vpa;
 
   return (
-    <div className="space-y-8">
-      {/* Tier picker styled as ticket stubs — a torn ticket rather than a
-          plain card grid, since "pick an amount" is literally choosing
-          a token, the way a chai-stall or a movie counter works. */}
+    <div className="space-y-6">
+      {/* BMC-style tap targets: rounded pills, thick border, hard offset
+          shadow that flattens on press — the "buy 1/3 coffees" pattern
+          this whole product borrowed its shape from. */}
       <div className="grid grid-cols-2 gap-4">
         {creator.tiers.map((t, i) => {
           const active = i === selected;
@@ -84,30 +84,20 @@ function PayPanelInner({
             <button
               key={t.label}
               onClick={() => selectTier(i)}
-              className={`group text-left rounded-lg border-2 transition ${
-                active
-                  ? "border-ink bg-paper-raised"
-                  : "border-rule bg-paper hover:border-ink/40"
+              className={`shadow-pop-press rounded-2xl border-2 border-ink px-4 py-4 text-center transition-transform ${
+                active ? "bg-yellow shadow-pop-lg" : "bg-card shadow-pop hover:bg-yellow/30"
               }`}
             >
-              <div className="px-4 pt-3 pb-2">
-                <div className="font-receipt text-[10px] tracking-[0.2em] uppercase text-muted">
-                  ☕ {t.label}
-                </div>
-              </div>
-              <div
-                className="ticket-notch tear-line px-4 pt-2 pb-3"
-                style={{ ["--notch-bg" as string]: active ? "var(--paper-raised)" : "var(--paper)" }}
-              >
-                <div className="font-display text-3xl text-ink">₹{t.amount}</div>
-              </div>
+              <div className="text-2xl">☕</div>
+              <div className="font-display text-sm font-semibold text-ink mt-1">{t.label}</div>
+              <div className="font-display text-2xl font-semibold text-ink">₹{t.amount}</div>
             </button>
           );
         })}
       </div>
 
       {vpaMissing && (
-        <p className="rounded-md bg-marigold/10 border border-marigold/40 p-3 text-sm text-marigold-ink">
+        <p className="rounded-xl border-2 border-ink bg-yellow/40 p-3 text-sm text-ink">
           ⚠️ This creator&apos;s UPI ID isn&apos;t set yet — the pay link below won&apos;t work
           until it is.
         </p>
@@ -125,10 +115,8 @@ function PayPanelInner({
         the scanning. See advisor note in project history re: "iOS is
         the trap" — this is that trap, observed live.
       */}
-      <div className="rounded-lg border-2 border-dashed border-rule bg-paper-raised p-6 flex flex-col items-center gap-4">
-        <p className="font-receipt text-[10px] tracking-[0.25em] uppercase text-muted">
-          · scan to pay ·
-        </p>
+      <div className="rounded-2xl border-2 border-ink bg-card shadow-pop p-6 flex flex-col items-center gap-4">
+        <p className="font-display text-sm font-semibold text-ink">Scan to pay</p>
         {qrDataUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -136,22 +124,21 @@ function PayPanelInner({
             alt="UPI QR code"
             width={200}
             height={200}
-            className="border border-rule"
+            className="rounded-xl border-2 border-ink"
           />
         )}
         <p className="text-xs text-muted text-center max-w-[26ch]">
           Scan with your UPI app&apos;s built-in scanner (GPay, PhonePe, Paytm, etc.) — most
           reliable. Amount is editable in your app.
         </p>
-        <hr className="tear-line w-full" />
         <a
           href={uri}
           onClick={handleTap}
-          className="w-full text-center rounded-md border border-ink/20 py-2 font-receipt text-xs text-muted hover:border-ink/40 hover:text-ink transition"
+          className="w-full text-center rounded-full border-2 border-ink py-2 text-sm font-display font-medium text-ink hover:bg-yellow/30 transition"
         >
           or tap to pay ₹{tier.amount} directly
         </a>
-        <p className="text-[11px] text-muted/80 text-center">
+        <p className="text-[11px] text-muted text-center">
           Tapping may open a different app than you expect on iPhone — if so, use the QR
           above instead.
         </p>

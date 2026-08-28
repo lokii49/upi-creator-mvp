@@ -12,11 +12,11 @@ import { inputClass, primaryButtonClass, eyebrowClass } from "@/lib/ui";
 
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen paper-texture flex items-start justify-center">
+    <main className="min-h-screen bg-yellow flex items-start justify-center">
       <div className="w-full max-w-md px-4 py-14 space-y-6">
         <div className="text-center space-y-1.5">
           <p className={eyebrowClass}>account</p>
-          <h1 className="font-display text-4xl text-ink">Manage your page</h1>
+          <h1 className="font-display text-4xl font-semibold text-ink">Manage your page</h1>
         </div>
         <AuthGate redirectPath="/dashboard">{(user) => <CreatorPicker user={user} />}</AuthGate>
       </div>
@@ -44,7 +44,7 @@ function CreatorPicker({ user }: { user: User }) {
       });
   }, [user.id]);
 
-  if (!creators) return <p className="font-receipt text-xs text-muted text-center">loading…</p>;
+  if (!creators) return <p className="text-sm text-muted text-center">Loading…</p>;
 
   if (creators.length === 0) {
     return (
@@ -59,7 +59,7 @@ function CreatorPicker({ user }: { user: User }) {
 
   if (creators.length > 1 && !selected) {
     return (
-      <ul className="space-y-2 rounded-lg border-2 border-rule bg-paper-raised p-4">
+      <ul className="space-y-2 rounded-2xl border-2 border-ink bg-card shadow-pop p-4">
         {creators.map((c) => (
           <li key={c.slug}>
             <button onClick={() => setSelected(c.slug)} className="text-sm text-ink underline">
@@ -115,11 +115,11 @@ function EditForm({ creator }: { creator: Creator }) {
   return (
     <form
       onSubmit={save}
-      className="space-y-4 rounded-lg border-2 border-rule bg-paper-raised p-5"
+      className="space-y-4 rounded-2xl border-2 border-ink bg-card shadow-pop p-6"
     >
-      <p className="font-receipt text-xs text-muted">
+      <p className="text-xs text-muted">
         support.tinyact.app/{creator.slug}{" "}
-        <Link href={`/${creator.slug}`} className="text-ink underline">
+        <Link href={`/${creator.slug}`} className="text-ink underline font-semibold">
           view page
         </Link>
       </p>

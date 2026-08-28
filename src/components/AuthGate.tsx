@@ -17,7 +17,7 @@ export function AuthGate({
   if (step === "authed" && user) return <>{children(user)}</>;
 
   return (
-    <div className="space-y-6">
+    <div className="rounded-2xl border-2 border-ink bg-card shadow-pop p-6">
       {step === "email" && (
         <form onSubmit={sendOtp} className="space-y-3">
           <p className="text-sm text-muted">
@@ -48,7 +48,7 @@ export function AuthGate({
             placeholder="123456"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            className={`${inputClass} font-receipt tracking-widest`}
+            className={`${inputClass} tracking-widest`}
           />
           {error && <p className="text-sm text-red-600">{error}</p>}
           <button type="submit" disabled={busy} className={primaryButtonClass}>

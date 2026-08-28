@@ -24,13 +24,11 @@ export function VpaField({ value, onChange }: { value: string; onChange: (v: str
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck={false}
-        className={`${inputClass} font-receipt`}
+        className={inputClass}
       />
       {value && (
-        <p
-          className={`mt-1 text-xs ${isValidVpa(value) ? "text-muted" : "text-marigold-ink"}`}
-        >
-          Payments will go to: <span className="font-receipt">{value}</span> — double-check
+        <p className={`mt-1 text-xs ${isValidVpa(value) ? "text-muted" : "text-amber-600"}`}>
+          Payments will go to: <span className="font-semibold">{value}</span> — double-check
           this is exactly right, it isn&apos;t verified anywhere.
         </p>
       )}

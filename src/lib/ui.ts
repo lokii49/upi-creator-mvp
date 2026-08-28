@@ -1,11 +1,11 @@
-// Shared Tailwind class strings for the warm-paper/receipt design language
-// (see globals.css for the token definitions). Kept here so every form
-// across register/dashboard/claim uses the exact same input/button
-// treatment instead of each drifting slightly.
+// Shared Tailwind class strings for the Buy-Me-a-Coffee-style design
+// language (see globals.css for tokens + the .shadow-pop utilities).
+// Kept here so every form across register/dashboard/claim uses the same
+// input/button treatment instead of each drifting slightly.
 export const inputClass =
-  "w-full rounded-md border border-rule bg-paper-raised px-3 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-ink";
+  "w-full rounded-xl border-2 border-ink bg-card px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-yellow";
 
 export const primaryButtonClass =
-  "w-full rounded-md bg-ink text-paper py-2.5 text-sm font-medium hover:bg-marigold-ink transition disabled:opacity-50";
+  "w-full rounded-full border-2 border-ink bg-yellow text-ink py-3 text-sm font-display font-semibold shadow-pop shadow-pop-press transition-transform disabled:opacity-50";
 
-export const eyebrowClass = "font-receipt text-[10px] tracking-[0.25em] uppercase text-muted";
+export const eyebrowClass = "font-display text-xs font-semibold uppercase tracking-wide text-muted";

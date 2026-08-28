@@ -31,7 +31,7 @@ export function TierEditor({
             placeholder="Label (e.g. 1 coffee)"
             value={t.label}
             onChange={(e) => updateTier(i, { label: e.target.value })}
-            className="flex-1 rounded-md border border-rule bg-paper-raised px-2 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-ink"
+            className="flex-1 rounded-xl border-2 border-ink bg-card px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-yellow"
           />
           <input
             type="number"
@@ -39,7 +39,7 @@ export function TierEditor({
             placeholder="₹"
             value={t.amount || ""}
             onChange={(e) => updateTier(i, { amount: Number(e.target.value) })}
-            className="w-20 rounded-md border border-rule bg-paper-raised px-2 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-ink font-receipt"
+            className="w-20 rounded-xl border-2 border-ink bg-card px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-yellow"
           />
           {tiers.length > 1 && (
             <button
@@ -52,7 +52,7 @@ export function TierEditor({
           )}
         </div>
       ))}
-      <button type="button" onClick={addTier} className="text-sm text-muted underline hover:text-ink">
+      <button type="button" onClick={addTier} className="text-sm text-ink underline font-semibold">
         + add tier
       </button>
     </div>

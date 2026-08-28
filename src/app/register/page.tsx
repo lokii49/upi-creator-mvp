@@ -12,11 +12,13 @@ import { inputClass, primaryButtonClass, eyebrowClass } from "@/lib/ui";
 
 export default function RegisterPage() {
   return (
-    <main className="min-h-screen paper-texture flex items-start justify-center">
+    <main className="min-h-screen bg-yellow flex items-start justify-center">
       <div className="w-full max-w-md px-4 py-14 space-y-6">
         <div className="text-center space-y-1.5">
           <p className={eyebrowClass}>new page</p>
-          <h1 className="font-display text-4xl text-ink">Create your support page</h1>
+          <h1 className="font-display text-4xl font-semibold text-ink">
+            Create your support page
+          </h1>
         </div>
         <AuthGate redirectPath="/register">{(user) => <ProfileForm user={user} />}</AuthGate>
       </div>
@@ -80,7 +82,7 @@ function ProfileForm({ user }: { user: User }) {
   return (
     <form
       onSubmit={createPage}
-      className="space-y-4 rounded-lg border-2 border-rule bg-paper-raised p-5"
+      className="space-y-4 rounded-2xl border-2 border-ink bg-card shadow-pop p-6"
     >
       <div>
         <label className="text-xs text-muted">
@@ -90,7 +92,7 @@ function ProfileForm({ user }: { user: User }) {
             placeholder="yourname"
             value={slug}
             onChange={(e) => setSlug(e.target.value.toLowerCase())}
-            className="inline w-40 rounded-md border border-rule bg-paper px-2 py-1 text-sm text-ink focus:outline-none focus:border-ink font-receipt"
+            className="inline w-40 rounded-lg border-2 border-ink bg-card px-2 py-1 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-yellow"
           />
         </label>
       </div>
