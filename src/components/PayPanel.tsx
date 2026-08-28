@@ -4,6 +4,7 @@ import type { Creator } from "@/lib/creators";
 import { usePaySession } from "@/lib/usePaySession";
 import { cardClass, gradientTextClass } from "@/lib/ui";
 import { ClaimForm } from "./ClaimForm";
+import { QrCode } from "./QrCode";
 
 // Skeleton variant "card" (default): tier picker + QR + tap-link in one
 // unified card. See HeroPayCard for the QR-first variant.
@@ -54,17 +55,7 @@ export function PayPanel({ creator }: { creator: Creator }) {
           </p>
         )}
 
-        <div
-          className="flex items-center justify-center rounded-xl border border-border"
-          style={{ minHeight: 190, minWidth: 190 }}
-        >
-          {qrDataUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={qrDataUrl} alt="UPI QR code" width={190} height={190} className="rounded-xl" />
-          ) : (
-            <span className="text-xs text-muted">Generating QR…</span>
-          )}
-        </div>
+        <QrCode dataUrl={qrDataUrl} size={190} />
 
         <a
           href={uri}

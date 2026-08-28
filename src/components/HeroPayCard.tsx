@@ -4,6 +4,7 @@ import type { Creator } from "@/lib/creators";
 import { usePaySession } from "@/lib/usePaySession";
 import { cardClass, gradientTextClass } from "@/lib/ui";
 import { ClaimForm } from "./ClaimForm";
+import { QrCode } from "./QrCode";
 
 // Skeleton variant "hero": QR is the first thing on the page, full stop.
 // Identity is a small caption riding on the QR card itself, not a
@@ -36,17 +37,7 @@ export function HeroPayCard({ creator }: { creator: Creator }) {
           <p className="text-sm font-semibold text-ink">{creator.name}</p>
         </div>
 
-        <div
-          className="flex items-center justify-center rounded-xl border border-border"
-          style={{ minHeight: 220, minWidth: 220 }}
-        >
-          {qrDataUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={qrDataUrl} alt="UPI QR code" width={220} height={220} className="rounded-xl" />
-          ) : (
-            <span className="text-xs text-muted">Generating QR…</span>
-          )}
-        </div>
+        <QrCode dataUrl={qrDataUrl} size={220} />
 
         <div className="flex gap-2">
           {creator.tiers.map((t, i) => {

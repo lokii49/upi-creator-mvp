@@ -33,6 +33,11 @@ export function usePaySession(creator: Creator) {
     QRCode.toDataURL(uri, {
       margin: 1,
       width: 220,
+      // H = ~30% of the code can be obstructed and still scan. Bumped
+      // from the default (M, ~15%) specifically so a small center-logo
+      // overlay (see QrCode.tsx) stays safely scannable — the same
+      // technique every UPI app's own QR uses for its center logo.
+      errorCorrectionLevel: "H",
       color: { dark: "#172026", light: "#ffffff" },
     }).then((url) => {
       if (!cancelled) setQrDataUrl(url);
