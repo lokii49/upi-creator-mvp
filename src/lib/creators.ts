@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 export type Tier = {
   label: string; // e.g. "1 coffee"
   amount: number; // INR, whole rupees
@@ -6,29 +8,57 @@ export type Tier = {
 export type Creator = {
   slug: string;
   name: string;
-  bio: string;
-  photo: string; // path under /public, or a full URL — leave "" for an initials placeholder
-  vpa: string; // UPI ID, e.g. "name@okhdfcbank" — PLACEHOLDER, replace before sharing a link
+  bio: string | null;
+  vpa: string; // UPI ID, e.g. "name@okhdfcbank"
   tiers: Tier[];
 };
 
-// Add one entry per creator here. No database needed for this — it's
-// config, not user data, and changes go through a PR/redeploy same as
-// any other code change.
-export const creators: Creator[] = [
-  {
-    slug: "aadi",
-    name: "Aadi — DEF Talks",
-    bio: "Explaining tech, simply.",
-    photo: "",
-    vpa: "REPLACE_WITH_AADI_VPA@bank", // ⚠️ placeholder — get real VPA before sending the link
-    tiers: [
-      { label: "1 coffee", amount: 49 },
-      { label: "3 coffees", amount: 149 },
-    ],
-  },
-];
+const SLUG_PATTERN = /^[a-z0-9]([a-z0-9-]{1,28}[a-z0-9])?$/;
 
-export function getCreator(slug: string): Creator | undefined {
-  return creators.find((c) => c.slug === slug);
+export function isValidSlug(slug: string): boolean {
+  return SLUG_PATTERN.test(slug);
+}
+
+type CreatorRow = {
+  slug: string;
+  name: string;
+  bio: string | null;
+  vpa: string;
+  tiers: Tier[];
+};
+
+export async function getCreatorBySlug(slug: string): Promise<Creator | null> {
+  const { data, error } = await supabase
+    .from("creators")
+    .select("slug, name, bio, vpa, tiers")
+    .eq("slug", slug)
+    .maybeSingle<CreatorRow>();
+
+  if (error) {
+    console.error("getCreatorBySlug failed:", error.message);
+    return null;
+  }
+  if (!data) return null;
+
+  return {
+    slug: data.slug,
+    name: data.name,
+    bio: data.bio,
+    vpa: data.vpa,
+    tiers: Array.isArray(data.tiers) ? data.tiers : [],
+  };
+}
+
+export async function listCreators(): Promise<Pick<Creator, "slug" | "name">[]> {
+  const { data, error } = await supabase
+    .from("creators")
+    .select("slug, name")
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error) {
+    console.error("listCreators failed:", error.message);
+    return [];
+  }
+  return data ?? [];
 }

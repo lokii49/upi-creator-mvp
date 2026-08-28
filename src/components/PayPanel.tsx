@@ -9,6 +9,25 @@ import { ClaimForm } from "./ClaimForm";
 
 export function PayPanel({ creator }: { creator: Creator }) {
   const [selected, setSelected] = useState(0);
+  if (creator.tiers.length === 0) {
+    return (
+      <p className="text-sm text-neutral-500">
+        This creator hasn&apos;t set up any support tiers yet.
+      </p>
+    );
+  }
+  return <PayPanelInner creator={creator} selected={selected} setSelected={setSelected} />;
+}
+
+function PayPanelInner({
+  creator,
+  selected,
+  setSelected,
+}: {
+  creator: Creator;
+  selected: number;
+  setSelected: (i: number) => void;
+}) {
   // Empty on both server-render (build) and first client render — identical,
   // so no hydration mismatch. The real tr is generated client-side only,
   // right after mount (see effect below). Never seed this with useState(()
@@ -47,7 +66,7 @@ export function PayPanel({ creator }: { creator: Creator }) {
     logEvent(creator.slug, "tap", tr);
   }
 
-  const vpaIsPlaceholder = creator.vpa.startsWith("REPLACE_WITH_");
+  const vpaMissing = !creator.vpa;
 
   return (
     <div className="space-y-6">
@@ -68,7 +87,7 @@ export function PayPanel({ creator }: { creator: Creator }) {
         ))}
       </div>
 
-      {vpaIsPlaceholder && (
+      {vpaMissing && (
         <p className="rounded-md bg-yellow-50 dark:bg-yellow-950 border border-yellow-300 dark:border-yellow-800 p-3 text-sm text-yellow-800 dark:text-yellow-200">
           ⚠️ This creator&apos;s UPI ID isn&apos;t set yet — the pay link below won&apos;t work
           until it is.

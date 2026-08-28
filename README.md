@@ -4,24 +4,27 @@ Buy-Me-a-Coffee-style hosted page for a creator's own UPI ID. No custody of
 funds, no PA/AA/FIU licensing — the platform never touches money, it only
 captures supporter contact info (self-reported) and shows a public feed.
 
-Full spec: see the MVP spec doc (not in this repo — ask Lokesh).
+Self-serve: a creator signs in with email OTP and registers their own page
+at `support.tinyact.app/<slug>` — no code changes needed per creator.
 
 ## Stack
 
-- Next.js static export (`output: "export"`) — deployed to GitHub Pages, no server.
-- Supabase (`hajeiotyqmgzzbbgqafs`, ap-southeast-1) for `claims` + `events` tables,
-  called directly from the browser with the publishable/anon key. RLS locks
-  every table down — see `supabase/migrations/`.
+- Next.js, dynamic routes — deployed to Vercel (not a static export; a
+  brand-new signup has to appear with no rebuild).
+- Supabase (`hajeiotyqmgzzbbgqafs`, ap-southeast-1):
+  - `creators` — one row per creator, gated by Supabase Auth email OTP
+    (`owner_id = auth.uid()`). This is the one table that isn't
+    self-report-and-trust: it holds the UPI ID real payments get sent to,
+    so writes are scoped to a signed-in owner, not open to anon.
+  - `claims` / `events` / `public_feed_entries` — unchanged from the
+    original design: self-reported, RLS locked, no payment verification.
 - QR generated client-side (`qrcode` package) from a `upi://pay` intent URI.
 
-## Add a creator
+## Register a creator page
 
-Edit `src/lib/creators.ts` — add an entry with slug, name, bio, UPI VPA, and
-tiers. Push to `main`; GitHub Actions rebuilds and deploys automatically.
-
-**Get the creator's real UPI VPA before publishing their page** — a
-placeholder VPA (`REPLACE_WITH_...`) renders a warning banner instead of a
-working pay link.
+Go to `/register` — email OTP sign-in, then fill in slug/name/bio/UPI
+ID/tiers. No admin action needed; this replaced the old hand-edited
+`src/lib/creators.ts` config entirely.
 
 ## Local dev
 
@@ -32,9 +35,15 @@ npm run dev
 
 ## Deploy
 
-Push to `main` → GitHub Actions (`.github/workflows/deploy.yml`) builds and
-deploys to GitHub Pages → live at `support.tinyact.app` (DNS: CNAME
-`support` → `lokii49.github.io`, needs to be added once in your registrar).
+```bash
+vercel login   # once, interactively
+vercel link    # first time, links this dir to a Vercel project
+vercel --prod
+```
+
+Point `support.tinyact.app` at the Vercel project (Vercel dashboard →
+Domains), DNS: CNAME `support` → `cname.vercel-dns.com` (Vercel will show
+the exact target once the domain is added).
 
 ## What's deliberately NOT built (v0 scope)
 
@@ -43,3 +52,4 @@ deploys to GitHub Pages → live at `support.tinyact.app` (DNS: CNAME
 - No payment verification (no UTR, no bank/AA read) — claims are
   self-reported, labeled as such everywhere they're shown.
 - No creator dashboard — query Supabase directly for now.
+- No page editing after registration — one-shot create only.
