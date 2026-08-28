@@ -94,21 +94,37 @@ function PayPanelInner({
         </p>
       )}
 
+      {/*
+        QR is the primary path, tap-to-pay is secondary — not just a
+        desktop/mobile split. Confirmed on a real phone: the "Pay" link
+        below is a raw `upi://` scheme, and multiple apps register as
+        handlers for it (GPay, PhonePe, WhatsApp Pay, etc). Android shows
+        a chooser; iOS doesn't — it silently opens whichever app "won"
+        the scheme registration (often just install order), with no way
+        for the page or the user to control which one. Scanning the QR
+        sidesteps this entirely, since the person picks which app does
+        the scanning. See advisor note in project history re: "iOS is
+        the trap" — this is that trap, observed live.
+      */}
       <div className="flex flex-col items-center gap-4 rounded-xl border border-neutral-200 dark:border-neutral-800 p-5">
         {qrDataUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={qrDataUrl} alt="UPI QR code" width={220} height={220} />
         )}
+        <p className="text-xs text-neutral-500 text-center">
+          Scan with your UPI app's built-in scanner (GPay, PhonePe, Paytm, etc.) — most
+          reliable. Amount is editable in your UPI app, pay what you want.
+        </p>
         <a
           href={uri}
           onClick={handleTap}
-          className="w-full text-center rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 py-2.5 text-sm font-medium"
+          className="w-full text-center rounded-md border border-neutral-300 dark:border-neutral-700 py-2 text-sm text-neutral-600 dark:text-neutral-300"
         >
-          Pay ₹{tier.amount} with UPI app
+          or tap to pay ₹{tier.amount} directly
         </a>
-        <p className="text-xs text-neutral-500 text-center">
-          On phone: tap to open your UPI app. On desktop: scan the QR with your phone.
-          Amount is editable in your UPI app — pay what you want.
+        <p className="text-xs text-neutral-400 text-center">
+          Tapping may open a different app than you expect on iPhone — if so, use the QR
+          above instead.
         </p>
       </div>
 

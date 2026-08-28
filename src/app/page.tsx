@@ -22,12 +22,20 @@ export default async function Home() {
       ) : (
         <p className="text-sm text-neutral-500">No creator pages yet.</p>
       )}
-      <Link
-        href="/register"
-        className="inline-block rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium"
-      >
-        Create your page
-      </Link>
+      <div className="flex justify-center gap-3">
+        <Link
+          href="/register"
+          className="inline-block rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium"
+        >
+          Create your page
+        </Link>
+        <Link
+          href="/dashboard"
+          className="inline-block rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm font-medium"
+        >
+          Manage your page
+        </Link>
+      </div>
     </main>
   );
 }
