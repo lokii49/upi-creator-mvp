@@ -1,87 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import QRCode from "qrcode";
 import type { Creator } from "@/lib/creators";
-import { buildUpiUri, generateTr } from "@/lib/upi";
-import { logEvent } from "@/lib/events";
+import { usePaySession } from "@/lib/usePaySession";
 import { cardClass, gradientTextClass } from "@/lib/ui";
 import { ClaimForm } from "./ClaimForm";
 
+// Skeleton variant "card" (default): tier picker + QR + tap-link in one
+// unified card. See HeroPayCard for the QR-first variant.
 export function PayPanel({ creator }: { creator: Creator }) {
-  const [selected, setSelected] = useState(0);
-  if (creator.tiers.length === 0) {
+  const { selected, tier, uri, qrDataUrl, tr, selectTier, handleTap } = usePaySession(creator);
+
+  if (creator.tiers.length === 0 || !tier) {
     return (
       <p className="text-sm text-neutral-500">
         This creator hasn&apos;t set up any support tiers yet.
       </p>
     );
   }
-  return <PayPanelInner creator={creator} selected={selected} setSelected={setSelected} />;
-}
-
-function PayPanelInner({
-  creator,
-  selected,
-  setSelected,
-}: {
-  creator: Creator;
-  selected: number;
-  setSelected: (i: number) => void;
-}) {
-  // Empty on both server-render (build) and first client render — identical,
-  // so no hydration mismatch. The real tr is generated client-side only,
-  // right after mount (see effect below). Never seed this with useState(()
-  // => generateTr()): that runs during the static build too, baking a
-  // random value into the HTML that won't match what the client generates,
-  // which React flags as a hydration error on the href below.
-  const [tr, setTr] = useState("");
-  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
-
-  const tier = creator.tiers[selected];
-  const uri = tr ? buildUpiUri(creator, tier, tr) : "";
-
-  useEffect(() => {
-    setTr(generateTr());
-    logEvent(creator.slug, "view");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (!uri) return;
-    let cancelled = false;
-    QRCode.toDataURL(uri, {
-      margin: 1,
-      width: 220,
-      color: { dark: "#172026", light: "#ffffff" },
-    }).then((url) => {
-      if (!cancelled) setQrDataUrl(url);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [uri]);
-
-  function selectTier(i: number) {
-    setSelected(i);
-    setTr(generateTr());
-  }
-
-  function handleTap() {
-    logEvent(creator.slug, "tap", tr);
-  }
 
   const vpaMissing = !creator.vpa;
 
   return (
     <div className="space-y-6">
-      {/*
-        Everything needed to actually pay — pick amount, scan, tap-to-pay
-        — lives in one card now instead of three stacked ones. QR is
-        deliberately still plain white (bg-white on the card, no gradient
-        near it): it's the one element that can't be restyled and the
-        whole product depends on it staying scannable.
-      */}
       <div className={`${cardClass} p-5 sm:p-6 space-y-5`}>
         <div className="grid grid-cols-2 gap-2.5">
           {creator.tiers.map((t, i) => {
@@ -113,7 +53,6 @@ function PayPanelInner({
         )}
 
         <div className="flex flex-col items-center gap-3 border-t border-border pt-5">
-          {/* min-height reserves the slot so the QR popping in post-mount doesn't jump the layout */}
           <div
             className="flex items-center justify-center rounded-xl border border-border"
             style={{ minHeight: 200, minWidth: 200 }}
