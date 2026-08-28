@@ -37,7 +37,7 @@ export function HeroPayCard({ creator }: { creator: Creator }) {
           <p className="text-sm font-semibold text-ink">{creator.name}</p>
         </div>
 
-        <QrCode uri={uri} size={272} />
+        <QrCode uri={uri} size={320} />
 
         <div className="flex gap-2">
           {creator.tiers.map((t, i) => {
