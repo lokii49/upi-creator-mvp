@@ -8,15 +8,19 @@ import { isValidSlug, isValidVpa, type Tier } from "@/lib/creators";
 import { AuthGate } from "@/components/AuthGate";
 import { VpaField } from "@/components/VpaField";
 import { TierEditor } from "@/components/TierEditor";
-import { inputClass, primaryButtonClass, eyebrowClass } from "@/lib/ui";
+import { inputClass, inputCompactClass, primaryButtonClass, eyebrowClass, cardClass } from "@/lib/ui";
+import { BrandBadge } from "@/components/BrandBadge";
 
 export default function RegisterPage() {
   return (
     <main className="min-h-screen bg-surface flex items-start justify-center">
       <div className="w-full max-w-md px-4 py-16 space-y-6">
-        <div className="text-center space-y-1.5">
-          <p className={eyebrowClass}>new page</p>
-          <h1 className="text-2xl font-semibold text-ink tracking-tight">
+        <div className="text-center space-y-2">
+          <span className={eyebrowClass}>
+            <BrandBadge size={16} />
+            new page
+          </span>
+          <h1 className="text-2xl font-extrabold text-ink tracking-tight">
             Create your support page
           </h1>
         </div>
@@ -80,10 +84,7 @@ function ProfileForm({ user }: { user: User }) {
   }
 
   return (
-    <form
-      onSubmit={createPage}
-      className="space-y-4 rounded-xl border border-border bg-bg p-6"
-    >
+    <form onSubmit={createPage} className={`space-y-4 ${cardClass} p-6`}>
       <div>
         <label className="text-xs text-muted">
           Your page: support.tinyact.app/
@@ -92,7 +93,7 @@ function ProfileForm({ user }: { user: User }) {
             placeholder="yourname"
             value={slug}
             onChange={(e) => setSlug(e.target.value.toLowerCase())}
-            className="inline w-40 rounded-lg border border-border bg-bg px-2 py-1 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
+            className={`inline w-40 ${inputCompactClass}`}
           />
         </label>
       </div>

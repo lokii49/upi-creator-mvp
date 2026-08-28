@@ -2,7 +2,7 @@
 
 import type { User } from "@supabase/supabase-js";
 import { useEmailOtpAuth } from "@/lib/useEmailOtpAuth";
-import { inputClass, primaryButtonClass } from "@/lib/ui";
+import { inputClass, primaryButtonClass, cardClass } from "@/lib/ui";
 
 export function AuthGate({
   redirectPath,
@@ -17,7 +17,7 @@ export function AuthGate({
   if (step === "authed" && user) return <>{children(user)}</>;
 
   return (
-    <div className="rounded-xl border border-border bg-bg p-6">
+    <div className={`${cardClass} p-6`}>
       {step === "email" && (
         <form onSubmit={sendOtp} className="space-y-3">
           <p className="text-sm text-muted">

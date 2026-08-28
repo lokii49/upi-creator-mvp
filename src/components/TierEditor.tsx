@@ -1,7 +1,7 @@
 "use client";
 
 import type { Tier } from "@/lib/creators";
-import { eyebrowClass } from "@/lib/ui";
+import { eyebrowClass, inputCompactClass } from "@/lib/ui";
 
 export function TierEditor({
   tiers,
@@ -31,7 +31,7 @@ export function TierEditor({
             placeholder="Label (e.g. 1 coffee)"
             value={t.label}
             onChange={(e) => updateTier(i, { label: e.target.value })}
-            className="flex-1 rounded-lg border border-border bg-bg px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
+            className={`flex-1 ${inputCompactClass}`}
           />
           <input
             type="number"
@@ -39,7 +39,7 @@ export function TierEditor({
             placeholder="₹"
             value={t.amount || ""}
             onChange={(e) => updateTier(i, { amount: Number(e.target.value) })}
-            className="w-20 rounded-lg border border-border bg-bg px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
+            className={`w-20 ${inputCompactClass}`}
           />
           {tiers.length > 1 && (
             <button

@@ -5,6 +5,7 @@ import QRCode from "qrcode";
 import type { Creator } from "@/lib/creators";
 import { buildUpiUri, generateTr } from "@/lib/upi";
 import { logEvent } from "@/lib/events";
+import { cardClass, gradientTextClass } from "@/lib/ui";
 import { ClaimForm } from "./ClaimForm";
 
 export function PayPanel({ creator }: { creator: Creator }) {
@@ -81,14 +82,16 @@ function PayPanelInner({
             <button
               key={t.label}
               onClick={() => selectTier(i)}
-              className={`rounded-xl border px-4 py-3.5 text-left transition ${
+              className={`rounded-2xl border-2 px-4 py-3.5 text-left transition ${
                 active
-                  ? "border-accent bg-accent-soft"
-                  : "border-border bg-bg hover:border-ink/20"
+                  ? "border-accent bg-accent-soft shadow-[0_8px_20px_-10px_rgba(99,102,241,0.5)]"
+                  : "border-border bg-white hover:border-accent/30"
               }`}
             >
               <div className="text-sm text-muted">☕ {t.label}</div>
-              <div className="text-xl font-semibold text-ink">₹{t.amount}</div>
+              <div className={`text-xl font-extrabold ${active ? gradientTextClass : "text-ink"}`}>
+                ₹{t.amount}
+              </div>
             </button>
           );
         })}
@@ -113,8 +116,14 @@ function PayPanelInner({
         the scanning. See advisor note in project history re: "iOS is
         the trap" — this is that trap, observed live.
       */}
-      <div className="rounded-xl border border-border bg-bg p-6 flex flex-col items-center gap-4">
-        <p className="text-sm font-medium text-ink">Scan to pay</p>
+      {/*
+        Deliberately plain white, never the gradient/tinted treatment
+        used elsewhere on this page — the QR is the one element that
+        can't be restyled and the whole product depends on it staying
+        scannable at guaranteed contrast.
+      */}
+      <div className={`${cardClass} p-6 flex flex-col items-center gap-4`}>
+        <p className="text-sm font-semibold text-ink">Scan to pay</p>
         {qrDataUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -122,7 +131,7 @@ function PayPanelInner({
             alt="UPI QR code"
             width={200}
             height={200}
-            className="rounded-lg border border-border"
+            className="rounded-xl border border-border"
           />
         )}
         <p className="text-xs text-muted text-center max-w-[26ch]">
@@ -132,7 +141,7 @@ function PayPanelInner({
         <a
           href={uri}
           onClick={handleTap}
-          className="w-full text-center rounded-lg border border-border py-2 text-sm text-muted hover:border-ink/30 hover:text-ink transition"
+          className="w-full text-center rounded-full border border-border py-2 text-sm text-muted hover:border-accent/40 hover:text-ink transition"
         >
           or tap to pay ₹{tier.amount} directly
         </a>

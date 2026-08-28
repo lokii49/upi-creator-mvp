@@ -8,15 +8,19 @@ import { isValidVpa, type Creator, type Tier } from "@/lib/creators";
 import { AuthGate } from "@/components/AuthGate";
 import { VpaField } from "@/components/VpaField";
 import { TierEditor } from "@/components/TierEditor";
-import { inputClass, primaryButtonClass, eyebrowClass } from "@/lib/ui";
+import { inputClass, primaryButtonClass, eyebrowClass, cardClass } from "@/lib/ui";
+import { BrandBadge } from "@/components/BrandBadge";
 
 export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-surface flex items-start justify-center">
       <div className="w-full max-w-md px-4 py-16 space-y-6">
-        <div className="text-center space-y-1.5">
-          <p className={eyebrowClass}>account</p>
-          <h1 className="text-2xl font-semibold text-ink tracking-tight">Manage your page</h1>
+        <div className="text-center space-y-2">
+          <span className={eyebrowClass}>
+            <BrandBadge size={16} />
+            account
+          </span>
+          <h1 className="text-2xl font-extrabold text-ink tracking-tight">Manage your page</h1>
         </div>
         <AuthGate redirectPath="/dashboard">{(user) => <CreatorPicker user={user} />}</AuthGate>
       </div>
@@ -59,7 +63,7 @@ function CreatorPicker({ user }: { user: User }) {
 
   if (creators.length > 1 && !selected) {
     return (
-      <ul className="space-y-2 rounded-xl border border-border bg-bg p-4">
+      <ul className={`space-y-2 ${cardClass} p-4`}>
         {creators.map((c) => (
           <li key={c.slug}>
             <button onClick={() => setSelected(c.slug)} className="text-sm text-ink underline">
@@ -113,10 +117,7 @@ function EditForm({ creator }: { creator: Creator }) {
   }
 
   return (
-    <form
-      onSubmit={save}
-      className="space-y-4 rounded-xl border border-border bg-bg p-6"
-    >
+    <form onSubmit={save} className={`space-y-4 ${cardClass} p-6`}>
       <p className="text-xs text-muted">
         support.tinyact.app/{creator.slug}{" "}
         <Link href={`/${creator.slug}`} className="text-ink underline font-semibold">
@@ -141,7 +142,7 @@ function EditForm({ creator }: { creator: Creator }) {
       <TierEditor tiers={tiers} onChange={setTiers} />
 
       {error && <p className="text-sm text-red-600">{error}</p>}
-      {saved && <p className="text-sm text-success">Saved.</p>}
+      {saved && <p className="text-sm font-semibold text-success">Saved.</p>}
       <button type="submit" disabled={busy} className={primaryButtonClass}>
         {busy ? "Saving…" : "Save changes"}
       </button>

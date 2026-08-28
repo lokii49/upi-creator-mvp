@@ -1,21 +1,30 @@
 @import "tailwindcss";
 
 /*
-  Clean and minimal, by explicit request after two rejected bolder
-  directions (vintage-receipt, then loud BMC-cartoon). No signature
-  motif this time — precision in spacing/type/color instead. One quiet
-  accent (amber, a restrained nod to "coffee" — never a full-bleed
-  background), soft borders, soft shadows, generous whitespace.
+  Fourth pass. Direction: reference-driven this time (satya/@heysatya_'s
+  kree8.studio portfolio), not guessed from an adjective. Recurring
+  vocabulary across his work: big soft radii, floating white cards on a
+  muted grey canvas, a small gradient-badge icon as the recurring mark,
+  pill buttons, one gradient-accent word per headline, soft layered
+  shadows instead of flat borders. Kept the canvas light (not his dark
+  app-screen mockups) specifically so the UPI QR code — the one element
+  that can't be restyled and the whole product depends on — stays on a
+  plain white plate at guaranteed contrast.
+
+  Signature element: the ₹ gradient squircle (see BrandBadge.tsx). Used
+  sparingly — brand mark, creator avatar, primary CTA, one accent word —
+  everything else stays quiet so that mark stays memorable.
 */
 :root {
-  --ink: #0f172a;
+  --ink: #0b0f19;
   --muted: #64748b;
   --bg: #ffffff;
-  --surface: #faf9f7;
-  --border: #e7e3dc;
-  --accent: #b45309;
-  --accent-soft: #fef3e2;
-  --success: #15803d;
+  --surface: #f1f2f6;
+  --border: #e8e9ee;
+  --accent: #6366f1;
+  --accent2: #14b8a6;
+  --accent-soft: #eef2ff;
+  --success: #16a34a;
 
   --background: var(--bg);
   --foreground: var(--ink);
@@ -30,14 +39,15 @@
   --color-surface: var(--surface);
   --color-border: var(--border);
   --color-accent: var(--accent);
+  --color-accent2: var(--accent2);
   --color-accent-soft: var(--accent-soft);
   --color-success: var(--success);
 
-  --font-body: var(--font-body);
+  --font-display: var(--font-display);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-body), system-ui, sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
 }

@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-body",
+// Single family, variable weight — geometric/rounded grotesk in the same
+// register as the satya/kree8 reference. Weight alone carries hierarchy
+// (800 for headlines, 600 for UI labels, 500 for body) instead of mixing
+// families, keeping this pass to the "one distinctive choice, everything
+// else quiet" rule.
+const manrope = Manrope({
+  variable: "--font-display",
   subsets: ["latin"],
 });
 
@@ -14,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="en" className={`${manrope.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

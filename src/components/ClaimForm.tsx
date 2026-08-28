@@ -4,7 +4,7 @@ import { useState, FormEvent } from "react";
 import { supabase } from "@/lib/supabase";
 import { logEvent } from "@/lib/events";
 import type { Tier } from "@/lib/creators";
-import { inputClass, primaryButtonClass } from "@/lib/ui";
+import { inputClass, primaryButtonClass, cardClass } from "@/lib/ui";
 
 type Props = {
   creatorSlug: string;
@@ -64,8 +64,8 @@ export function ClaimForm({ creatorSlug, tier, tr }: Props) {
 
   if (status === "done") {
     return (
-      <div className="rounded-xl border border-success/30 bg-success/5 p-5 text-center space-y-1">
-        <p className="text-sm font-medium text-success">You&apos;re on the list</p>
+      <div className="rounded-3xl border border-success/30 bg-success/5 p-5 text-center space-y-1">
+        <p className="text-sm font-semibold text-success">You&apos;re on the list</p>
         <p className="text-sm text-muted">
           The creator will reach out directly by email if there&apos;s a reward for this tier.
         </p>
@@ -74,12 +74,9 @@ export function ClaimForm({ creatorSlug, tier, tr }: Props) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 rounded-xl border border-border bg-bg p-5"
-    >
+    <form onSubmit={handleSubmit} className={`space-y-4 ${cardClass} p-5`}>
       <div>
-        <p className="text-sm font-medium text-ink">Claim your support</p>
+        <p className="text-sm font-semibold text-ink">Claim your support</p>
         <p className="text-sm text-muted mt-0.5">
           Already paid (or about to)? Drop your details so the creator knows it was you.
         </p>
