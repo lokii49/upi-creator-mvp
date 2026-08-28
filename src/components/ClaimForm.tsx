@@ -4,7 +4,7 @@ import { useState, FormEvent } from "react";
 import { supabase } from "@/lib/supabase";
 import { logEvent } from "@/lib/events";
 import type { Tier } from "@/lib/creators";
-import { inputClass, primaryButtonClass, cardClass } from "@/lib/ui";
+import { inputClass, primaryButtonClass, cardSubtleClass } from "@/lib/ui";
 
 type Props = {
   creatorSlug: string;
@@ -74,9 +74,10 @@ export function ClaimForm({ creatorSlug, tier, tr }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`space-y-4 ${cardClass} p-5`}>
+    <form onSubmit={handleSubmit} className={`space-y-4 ${cardSubtleClass} p-5`}>
       <div>
-        <p className="text-sm font-semibold text-ink">Claim your support</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-muted">After you pay</p>
+        <p className="text-sm font-semibold text-ink mt-1">Claim your support</p>
         <p className="text-sm text-muted mt-0.5">
           Already paid (or about to)? Drop your details so the creator knows it was you.
         </p>

@@ -5,6 +5,7 @@ import { PayPanel } from "@/components/PayPanel";
 import { HeroPayCard } from "@/components/HeroPayCard";
 import { PublicFeed } from "@/components/PublicFeed";
 import { BrandBadge } from "@/components/BrandBadge";
+import { eyebrowClass } from "@/lib/ui";
 
 export const dynamic = "force-dynamic"; // always fetch fresh — a brand new signup must show up with no rebuild
 
@@ -36,37 +37,43 @@ export default async function CreatorPage({
   const creator = await getCreatorBySlug(slug);
   if (!creator) notFound();
 
-  // Three real skeletons to compare live, not mockups: ?layout=card
-  // (default — slim identity row, one unified pay card), ?layout=hero
-  // (QR is the literal first thing on the page), ?layout=banner
-  // (full-bleed identity header, same pay card as "card" below it).
-  const layout: Layout =
-    layoutParam === "hero" || layoutParam === "banner" ? layoutParam : "card";
+  // banner won the live 3-way comparison — now the default. ?layout=card
+  // / ?layout=hero still reachable for reference.
+  const layout: Layout = layoutParam === "card" || layoutParam === "hero" ? layoutParam : "banner";
 
   return (
     <main className="min-h-screen bg-surface">
       {layout === "banner" && (
-        <div className="bg-gradient-to-br from-accent to-accent2 px-4 py-10">
-          <div className="mx-auto max-w-lg flex items-center gap-4">
+        <div className="bg-gradient-to-br from-accent to-accent2" style={{ height: 128 }} />
+      )}
+
+      <div className={`mx-auto max-w-lg px-4 pb-10 space-y-6 ${layout === "banner" ? "" : "pt-10"}`}>
+        {layout === "banner" && (
+          // Avatar overlaps the banner/content seam — the standard
+          // cover-photo pattern (LinkedIn/Twitter profile headers) —
+          // instead of the banner and the pay card meeting as two flat
+          // stacked blocks. Ring color matches the page background so
+          // it reads as a clean cutout against the gradient, not a
+          // random white circle.
+          <div className="-mt-12 flex flex-col items-center text-center gap-2">
             <div
               aria-hidden
-              className="flex shrink-0 items-center justify-center rounded-full bg-white/20 text-2xl font-extrabold text-white ring-2 ring-white/40"
-              style={{ height: 68, width: 68 }}
+              className="flex items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent2 text-2xl font-extrabold text-white ring-4 ring-surface shadow-[0_8px_20px_-6px_rgba(15,23,42,0.35)]"
+              style={{ height: 88, width: 88 }}
             >
               {creator.name.charAt(0)}
             </div>
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wide text-white/70">
-                tinyact / support
-              </p>
-              <h1 className="text-2xl font-extrabold text-white truncate">{creator.name}</h1>
-              {creator.bio && <p className="text-sm text-white/80 truncate">{creator.bio}</p>}
+            <span className={eyebrowClass}>
+              <BrandBadge size={14} />
+              tinyact / support
+            </span>
+            <div>
+              <h1 className="text-xl font-extrabold text-ink tracking-tight">{creator.name}</h1>
+              {creator.bio && <p className="text-sm text-muted max-w-xs mx-auto">{creator.bio}</p>}
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="mx-auto max-w-lg px-4 py-10 space-y-6">
         {layout === "card" && (
           <>
             <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-muted">

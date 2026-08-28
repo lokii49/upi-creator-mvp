@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { cardClass } from "@/lib/ui";
+import { cardSubtleClass } from "@/lib/ui";
 
 type FeedEntry = {
   id: string;
@@ -39,7 +39,7 @@ export function PublicFeed({ creatorSlug }: { creatorSlug: string }) {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm font-semibold text-ink">Recent supporters</p>
+      <p className="text-xs font-bold uppercase tracking-wide text-muted">Recent supporters</p>
 
       {!entries && <p className="text-sm text-muted py-4">Loading…</p>}
 
@@ -48,12 +48,12 @@ export function PublicFeed({ creatorSlug }: { creatorSlug: string }) {
       )}
 
       {entries && entries.length > 0 && (
-        <ul className={`${cardClass} divide-y divide-border overflow-hidden`}>
+        <ul className={`${cardSubtleClass} divide-y divide-border overflow-hidden`}>
           {entries.map((e) => (
             <li key={e.id} className="px-4 py-3 flex items-start gap-3">
               <div
                 aria-hidden
-                className="flex items-center justify-center rounded-full bg-accent-soft text-xs font-bold text-accent shrink-0"
+                className="flex items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent2 text-xs font-bold text-white shrink-0"
                 style={{ height: 28, width: 28 }}
               >
                 {e.display_name.charAt(0)}

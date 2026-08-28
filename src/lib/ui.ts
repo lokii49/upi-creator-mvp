@@ -30,4 +30,9 @@ export const eyebrowClass =
 export const cardClass =
   "rounded-3xl border border-border bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_20px_40px_-16px_rgba(99,102,241,0.2)]";
 
+// Quieter than cardClass — no lifted tinted shadow. For secondary
+// sections (claim form, supporter feed) so the pay card stays the one
+// thing on the page that visually pops.
+export const cardSubtleClass = "rounded-3xl border border-border bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03)]";
+
 export const gradientTextClass = "bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent";
