@@ -10,13 +10,14 @@ import type QRCodeStyling from "qr-code-styling";
 const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#14b8a6"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)"/><text x="32" y="44" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="800" fill="white" text-anchor="middle">₹</text></svg>`;
 const LOGO_DATA_URI = `data:image/svg+xml;utf8,${encodeURIComponent(LOGO_SVG)}`;
 
-// Rounded gradient dots for a distinctive look, but the three finder
-// squares (the big corner markers a scanner locks onto first) stay
-// solid near-black — those are the one part of a "cute" QR that must
-// never go gradient/light, or real-world scanning gets unreliable.
-// errorCorrectionLevel "H" (~30% obstruction budget) covers the center
-// logo with real margin to spare.
-export function QrCode({ uri, size = 190 }: { uri: string; size?: number }) {
+// Gradient dot-matrix (circular dots, not rounded squares — reads
+// cleaner/more polished at a glance) for a distinctive look, but the
+// three finder squares (the big corner markers a scanner locks onto
+// first) stay solid near-black — those are the one part of a "cute" QR
+// that must never go gradient/light, or real-world scanning gets
+// unreliable. errorCorrectionLevel "H" (~30% obstruction budget) covers
+// the center logo with real margin to spare.
+export function QrCode({ uri, size = 240 }: { uri: string; size?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const qrRef = useRef<QRCodeStyling | null>(null);
 
@@ -32,10 +33,10 @@ export function QrCode({ uri, size = 190 }: { uri: string; size?: number }) {
           width: size,
           height: size,
           data: uri,
-          margin: 4,
+          margin: 8,
           qrOptions: { errorCorrectionLevel: "H" },
           dotsOptions: {
-            type: "rounded",
+            type: "dots",
             gradient: {
               type: "linear",
               rotation: Math.PI / 4,
@@ -65,7 +66,7 @@ export function QrCode({ uri, size = 190 }: { uri: string; size?: number }) {
 
   return (
     <div
-      className="flex items-center justify-center rounded-2xl border-2 border-accent-soft bg-white p-2"
+      className="flex items-center justify-center rounded-3xl border-2 border-accent-soft bg-white p-3"
       style={{ minHeight: size, minWidth: size }}
     >
       <div ref={containerRef} />

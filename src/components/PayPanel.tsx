@@ -55,7 +55,7 @@ export function PayPanel({ creator }: { creator: Creator }) {
           </p>
         )}
 
-        <QrCode uri={uri} size={190} />
+        <QrCode uri={uri} size={252} />
 
         <a
           href={uri}
