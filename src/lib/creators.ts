@@ -19,6 +19,17 @@ export function isValidSlug(slug: string): boolean {
   return SLUG_PATTERN.test(slug);
 }
 
+// Loose sanity check, not a real UPI VPA validator — the NPCI spec allows
+// hyphens/dots/underscores in the local part, so a mistyped-but-plausible
+// VPA (e.g. an autofilled phone number) can pass this and still be wrong.
+// That's why the registration form also shows a live preview: format
+// validity isn't enough, the creator has to actually look at the value.
+const VPA_PATTERN = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z][a-zA-Z0-9.\-]{1,64}$/;
+
+export function isValidVpa(vpa: string): boolean {
+  return VPA_PATTERN.test(vpa);
+}
+
 type CreatorRow = {
   slug: string;
   name: string;

@@ -3,7 +3,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { isValidSlug, type Tier } from "@/lib/creators";
+import { isValidSlug, isValidVpa, type Tier } from "@/lib/creators";
 
 type Step = "email" | "otp" | "profile";
 
@@ -94,6 +94,10 @@ export default function RegisterPage() {
 
     if (!isValidSlug(slug)) {
       setError("URL can only use lowercase letters, numbers, and hyphens (3-30 chars).");
+      return;
+    }
+    if (!isValidVpa(vpa)) {
+      setError("That doesn't look like a valid UPI ID (should be something@bank).");
       return;
     }
     if (tiers.length === 0 || tiers.some((t) => !t.label || t.amount <= 0)) {
@@ -215,11 +219,36 @@ export default function RegisterPage() {
           />
           <input
             required
+            name="upi-vpa"
             placeholder="Your UPI ID (e.g. name@okhdfcbank)"
             value={vpa}
             onChange={(e) => setVpa(e.target.value.trim())}
+            // Caught a real bug from this: a phone-shaped VPA got silently
+            // autofilled wrong (a stray hyphen inserted) and nothing in the
+            // form surfaced it — the creator only found out when a real
+            // payment failed. autoComplete="off" plus an unusual `name`
+            // stops most browsers/keyboards from "helpfully" substituting
+            // a saved contact/phone value here; the live preview below is
+            // the actual defense, since a substituted value can still be
+            // format-valid and pass isValidVpa.
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
             className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
           />
+          {vpa && (
+            <p
+              className={`text-xs ${
+                isValidVpa(vpa)
+                  ? "text-neutral-500"
+                  : "text-amber-600 dark:text-amber-400"
+              }`}
+            >
+              Payments will go to: <span className="font-mono">{vpa}</span> — double-check
+              this is exactly right, it isn&apos;t verified anywhere.
+            </p>
+          )}
 
           <div className="space-y-2">
             <p className="text-xs text-neutral-500">Support tiers</p>
