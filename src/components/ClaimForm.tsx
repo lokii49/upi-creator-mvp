@@ -45,7 +45,15 @@ export function ClaimForm({ creatorSlug, tier, tr }: Props) {
 
     if (error) {
       setStatus("error");
-      setErrorMsg(error.message);
+      // 42501 = RLS check failed. contact_consent is already guaranteed
+      // true above, so the only other thing the policy checks is the
+      // 24h-per-email rate limit — map it to a message that means
+      // something, instead of a raw Postgres error string.
+      setErrorMsg(
+        error.code === "42501"
+          ? "Looks like you've already claimed for this creator recently — try again in 24h."
+          : error.message
+      );
       return;
     }
 
