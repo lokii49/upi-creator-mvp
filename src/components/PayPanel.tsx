@@ -75,80 +75,71 @@ function PayPanelInner({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-3">
-        {creator.tiers.map((t, i) => {
-          const active = i === selected;
-          return (
-            <button
-              key={t.label}
-              onClick={() => selectTier(i)}
-              className={`rounded-2xl border-2 px-4 py-3.5 text-left transition ${
-                active
-                  ? "border-accent bg-accent-soft shadow-[0_8px_20px_-10px_rgba(99,102,241,0.5)]"
-                  : "border-border bg-white hover:border-accent/30"
-              }`}
-            >
-              <div className="text-sm text-muted">☕ {t.label}</div>
-              <div className={`text-xl font-extrabold ${active ? gradientTextClass : "text-ink"}`}>
-                ₹{t.amount}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {vpaMissing && (
-        <p className="rounded-lg border border-accent/30 bg-accent-soft p-3 text-sm text-accent">
-          ⚠️ This creator&apos;s UPI ID isn&apos;t set yet — the pay link below won&apos;t work
-          until it is.
-        </p>
-      )}
-
       {/*
-        QR is the primary path, tap-to-pay is secondary — not just a
-        desktop/mobile split. Confirmed on a real phone: the "Pay" link
-        below is a raw `upi://` scheme, and multiple apps register as
-        handlers for it (GPay, PhonePe, WhatsApp Pay, etc). Android shows
-        a chooser; iOS doesn't — it silently opens whichever app "won"
-        the scheme registration (often just install order), with no way
-        for the page or the user to control which one. Scanning the QR
-        sidesteps this entirely, since the person picks which app does
-        the scanning. See advisor note in project history re: "iOS is
-        the trap" — this is that trap, observed live.
+        Everything needed to actually pay — pick amount, scan, tap-to-pay
+        — lives in one card now instead of three stacked ones. QR is
+        deliberately still plain white (bg-white on the card, no gradient
+        near it): it's the one element that can't be restyled and the
+        whole product depends on it staying scannable.
       */}
-      {/*
-        Deliberately plain white, never the gradient/tinted treatment
-        used elsewhere on this page — the QR is the one element that
-        can't be restyled and the whole product depends on it staying
-        scannable at guaranteed contrast.
-      */}
-      <div className={`${cardClass} p-6 flex flex-col items-center gap-4`}>
-        <p className="text-sm font-semibold text-ink">Scan to pay</p>
-        {qrDataUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={qrDataUrl}
-            alt="UPI QR code"
-            width={200}
-            height={200}
-            className="rounded-xl border border-border"
-          />
+      <div className={`${cardClass} p-5 sm:p-6 space-y-5`}>
+        <div className="grid grid-cols-2 gap-2.5">
+          {creator.tiers.map((t, i) => {
+            const active = i === selected;
+            return (
+              <button
+                key={t.label}
+                onClick={() => selectTier(i)}
+                className={`rounded-2xl border-2 px-4 py-3 text-left transition ${
+                  active
+                    ? "border-accent bg-accent-soft"
+                    : "border-border bg-white hover:border-accent/30"
+                }`}
+              >
+                <div className="text-xs text-muted">☕ {t.label}</div>
+                <div className={`text-lg font-extrabold ${active ? gradientTextClass : "text-ink"}`}>
+                  ₹{t.amount}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {vpaMissing && (
+          <p className="rounded-lg border border-accent/30 bg-accent-soft p-3 text-sm text-accent">
+            ⚠️ This creator&apos;s UPI ID isn&apos;t set yet — the pay link below won&apos;t work
+            until it is.
+          </p>
         )}
-        <p className="text-xs text-muted text-center max-w-[26ch]">
-          Scan with your UPI app&apos;s built-in scanner (GPay, PhonePe, Paytm, etc.) — most
-          reliable. Amount is editable in your app.
-        </p>
-        <a
-          href={uri}
-          onClick={handleTap}
-          className="w-full text-center rounded-full border border-border py-2 text-sm text-muted hover:border-accent/40 hover:text-ink transition"
-        >
-          or tap to pay ₹{tier.amount} directly
-        </a>
-        <p className="text-[11px] text-muted text-center">
-          Tapping may open a different app than you expect on iPhone — if so, use the QR
-          above instead.
-        </p>
+
+        <div className="flex flex-col items-center gap-3 border-t border-border pt-5">
+          {/* min-height reserves the slot so the QR popping in post-mount doesn't jump the layout */}
+          <div
+            className="flex items-center justify-center rounded-xl border border-border"
+            style={{ minHeight: 200, minWidth: 200 }}
+          >
+            {qrDataUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={qrDataUrl} alt="UPI QR code" width={200} height={200} className="rounded-xl" />
+            ) : (
+              <span className="text-xs text-muted">Generating QR…</span>
+            )}
+          </div>
+          <p className="text-xs text-muted text-center max-w-[30ch]">
+            Scan with your UPI app&apos;s built-in scanner (GPay, PhonePe, Paytm, etc.)
+          </p>
+          <a
+            href={uri}
+            onClick={handleTap}
+            className="w-full text-center rounded-full border border-border py-2 text-sm text-muted hover:border-accent/40 hover:text-ink transition"
+          >
+            or tap to pay ₹{tier.amount} directly
+          </a>
+          <p className="text-[11px] text-muted text-center">
+            Tapping may open a different app than you expect on iPhone — if so, use the QR
+            above instead.
+          </p>
+        </div>
       </div>
 
       <ClaimForm creatorSlug={creator.slug} tier={tier} tr={tr} />

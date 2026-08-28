@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { getCreatorBySlug } from "@/lib/creators";
 import { PayPanel } from "@/components/PayPanel";
 import { PublicFeed } from "@/components/PublicFeed";
-import { eyebrowClass } from "@/lib/ui";
 import { BrandBadge } from "@/components/BrandBadge";
 
 export const dynamic = "force-dynamic"; // always fetch fresh — a brand new signup must show up with no rebuild
@@ -33,24 +32,36 @@ export default async function CreatorPage({
 
   return (
     <main className="min-h-screen bg-surface">
-      <div className="mx-auto max-w-lg px-4 py-16 space-y-10">
-        <header className="flex flex-col items-center gap-4 text-center">
-          <span className={eyebrowClass}>
-            <BrandBadge size={16} />
-            tinyact / support
-          </span>
+      <div className="mx-auto max-w-lg px-4 py-10 space-y-6">
+        {/*
+          Pass 4 buried identity below an 84px hero avatar and put the QR
+          ~700px down, after two separate stacked cards. User rated it
+          1/10 on exactly that: "the name, QR placement and all other".
+          This pass: identity is one slim row (not a detached hero
+          block), and the tier picker + QR + pay link live inside ONE
+          card immediately below it — no scrolling past extra boxes to
+          reach the thing people actually came to do.
+        */}
+        <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-muted">
+          <BrandBadge size={14} />
+          tinyact / support
+        </div>
+
+        <div className="flex items-center gap-3">
           <div
             aria-hidden
-            className="flex items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent2 text-2xl font-extrabold text-white shadow-[0_10px_24px_-8px_rgba(99,102,241,0.5)]"
-            style={{ height: 84, width: 84 }}
+            className="flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent2 text-lg font-extrabold text-white shadow-[0_8px_18px_-6px_rgba(99,102,241,0.5)]"
+            style={{ height: 52, width: 52 }}
           >
             {creator.name.charAt(0)}
           </div>
-          <div className="space-y-1">
-            <h1 className="text-2xl font-extrabold text-ink tracking-tight">{creator.name}</h1>
-            {creator.bio && <p className="text-sm text-muted max-w-xs mx-auto">{creator.bio}</p>}
+          <div className="min-w-0">
+            <h1 className="text-xl font-extrabold text-ink tracking-tight truncate">
+              {creator.name}
+            </h1>
+            {creator.bio && <p className="text-sm text-muted truncate">{creator.bio}</p>}
           </div>
-        </header>
+        </div>
 
         <PayPanel creator={creator} />
 
