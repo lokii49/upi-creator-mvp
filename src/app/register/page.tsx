@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { isValidSlug, type Tier } from "@/lib/creators";
@@ -24,13 +24,36 @@ export default function RegisterPage() {
     { label: "3 coffees", amount: 149 },
   ]);
 
+  // Covers the "click the link in the email" path, not just the "type the
+  // code" path: signInWithOtp's email also contains a clickable magic link
+  // (see supabase/templates/otp.html — we don't control whether the user
+  // clicks it or types the code). @supabase/supabase-js auto-detects the
+  // session from the URL when it redirects back here (detectSessionInUrl
+  // defaults to true) and fires SIGNED_IN — this just reacts to that by
+  // skipping straight to the profile step instead of leaving the user
+  // stuck on a page that silently did nothing.
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) setStep("profile");
+    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN") setStep("profile");
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   async function sendOtp(e: FormEvent) {
     e.preventDefault();
     setError("");
     setBusy(true);
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { shouldCreateUser: true },
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${window.location.origin}/register`,
+      },
     });
     setBusy(false);
     if (error) {
