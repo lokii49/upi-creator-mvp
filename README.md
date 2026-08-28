@@ -20,11 +20,14 @@ at `support.tinyact.app/<slug>` — no code changes needed per creator.
     original design: self-reported, RLS locked, no payment verification.
 - QR generated client-side (`qrcode` package) from a `upi://pay` intent URI.
 
-## Register a creator page
+## Register / manage a creator page
 
-Go to `/register` — email OTP sign-in, then fill in slug/name/bio/UPI
-ID/tiers. No admin action needed; this replaced the old hand-edited
-`src/lib/creators.ts` config entirely.
+- `/register` — email OTP sign-in, then fill in slug/name/bio/UPI ID/tiers.
+  No admin action needed; this replaced the old hand-edited
+  `src/lib/creators.ts` config entirely.
+- `/dashboard` — same email OTP sign-in, edit an existing page's
+  name/bio/UPI ID/tiers. Slug isn't editable (would break already-shared
+  links). No admin action needed here either.
 
 ## Local dev
 
@@ -42,8 +45,10 @@ vercel --prod
 ```
 
 Point `support.tinyact.app` at the Vercel project (Vercel dashboard →
-Domains), DNS: CNAME `support` → `cname.vercel-dns.com` (Vercel will show
-the exact target once the domain is added).
+Domains). DNS: `A support 76.76.21.21` in Cloudflare, **DNS-only / grey
+cloud, not proxied** — Vercel needs direct access to issue the HTTPS
+cert. (`vercel domains inspect <domain>` shows the exact record Vercel
+wants if this ever needs redoing.)
 
 ## What's deliberately NOT built (v0 scope)
 
@@ -51,5 +56,7 @@ the exact target once the domain is added).
   rewards are sent by hand.
 - No payment verification (no UTR, no bank/AA read) — claims are
   self-reported, labeled as such everywhere they're shown.
-- No creator dashboard — query Supabase directly for now.
-- No page editing after registration — one-shot create only.
+- No spam/rate-limit guard on claims yet — anyone can submit unlimited
+  claims with any name/email. Doesn't cost the creator money (self-report,
+  no custody), but pollutes their contact list. Was in the original spec,
+  never actually built — needs doing before wider rollout.
