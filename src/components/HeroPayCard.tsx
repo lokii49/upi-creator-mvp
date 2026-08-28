@@ -11,7 +11,7 @@ import { QrCode } from "./QrCode";
 // separate row above it. Tier amounts are a compact pill row that sits
 // on top of the QR like a price tag, not a 2-up grid before it.
 export function HeroPayCard({ creator }: { creator: Creator }) {
-  const { selected, tier, uri, qrDataUrl, tr, selectTier, handleTap } = usePaySession(creator);
+  const { selected, tier, uri, tr, selectTier, handleTap } = usePaySession(creator);
 
   if (creator.tiers.length === 0 || !tier) {
     return (
@@ -37,7 +37,7 @@ export function HeroPayCard({ creator }: { creator: Creator }) {
           <p className="text-sm font-semibold text-ink">{creator.name}</p>
         </div>
 
-        <QrCode dataUrl={qrDataUrl} size={220} />
+        <QrCode uri={uri} size={220} />
 
         <div className="flex gap-2">
           {creator.tiers.map((t, i) => {

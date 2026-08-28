@@ -14,7 +14,7 @@ import { QrCode } from "./QrCode";
 // pushed the tap-link below the fold. Pills + one collapsed caption
 // bring the whole payment card back above the fold on mobile.
 export function PayPanel({ creator }: { creator: Creator }) {
-  const { selected, tier, uri, qrDataUrl, tr, selectTier, handleTap } = usePaySession(creator);
+  const { selected, tier, uri, tr, selectTier, handleTap } = usePaySession(creator);
 
   if (creator.tiers.length === 0 || !tier) {
     return (
@@ -55,7 +55,7 @@ export function PayPanel({ creator }: { creator: Creator }) {
           </p>
         )}
 
-        <QrCode dataUrl={qrDataUrl} size={190} />
+        <QrCode uri={uri} size={190} />
 
         <a
           href={uri}

@@ -1,37 +1,75 @@
-// Center-logo QR frame — the same pattern every UPI app's own QR uses
-// (GPay/PhonePe/Paytm all put a small logo dead center). Safe because
-// usePaySession generates the code at errorCorrectionLevel "H" (~30%
-// obstruction budget) and the logo here covers a fraction of that. The
-// frame/padding is purely decorative and never touches the QR pixels.
-export function QrCode({ dataUrl, size = 190 }: { dataUrl: string | null; size?: number }) {
-  const logoSize = Math.round(size * 0.22);
-  const logoBacking = logoSize + 10;
+"use client";
+
+import { useEffect, useRef } from "react";
+import type QRCodeStyling from "qr-code-styling";
+
+// Small ₹ mark, same brand gradient as BrandBadge, encoded as an inline
+// SVG data URI so qr-code-styling can drop it in as the center image —
+// its own image-embedding handles the module excavation around the
+// logo properly (vs. our earlier manual absolute-positioned overlay).
+const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#14b8a6"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)"/><text x="32" y="44" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="800" fill="white" text-anchor="middle">₹</text></svg>`;
+const LOGO_DATA_URI = `data:image/svg+xml;utf8,${encodeURIComponent(LOGO_SVG)}`;
+
+// Rounded gradient dots for a distinctive look, but the three finder
+// squares (the big corner markers a scanner locks onto first) stay
+// solid near-black — those are the one part of a "cute" QR that must
+// never go gradient/light, or real-world scanning gets unreliable.
+// errorCorrectionLevel "H" (~30% obstruction budget) covers the center
+// logo with real margin to spare.
+export function QrCode({ uri, size = 190 }: { uri: string; size?: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const qrRef = useRef<QRCodeStyling | null>(null);
+
+  useEffect(() => {
+    if (!uri || !containerRef.current) return;
+    let cancelled = false;
+
+    import("qr-code-styling").then(({ default: QRCodeStylingCtor }) => {
+      if (cancelled || !containerRef.current) return;
+
+      if (!qrRef.current) {
+        qrRef.current = new QRCodeStylingCtor({
+          width: size,
+          height: size,
+          data: uri,
+          margin: 4,
+          qrOptions: { errorCorrectionLevel: "H" },
+          dotsOptions: {
+            type: "rounded",
+            gradient: {
+              type: "linear",
+              rotation: Math.PI / 4,
+              colorStops: [
+                { offset: 0, color: "#6366f1" },
+                { offset: 1, color: "#14b8a6" },
+              ],
+            },
+          },
+          cornersSquareOptions: { type: "extra-rounded", color: "#0b0f19" },
+          cornersDotOptions: { type: "dot", color: "#0b0f19" },
+          backgroundOptions: { color: "#ffffff" },
+          image: LOGO_DATA_URI,
+          imageOptions: { imageSize: 0.22, margin: 3 },
+        });
+        containerRef.current.innerHTML = "";
+        qrRef.current.append(containerRef.current);
+      } else {
+        qrRef.current.update({ data: uri });
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [uri, size]);
 
   return (
     <div
-      className="relative flex items-center justify-center rounded-2xl border-2 border-accent-soft bg-white p-2"
+      className="flex items-center justify-center rounded-2xl border-2 border-accent-soft bg-white p-2"
       style={{ minHeight: size, minWidth: size }}
     >
-      {dataUrl ? (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={dataUrl} alt="UPI QR code" width={size} height={size} className="rounded-lg" />
-          <div
-            aria-hidden
-            className="absolute flex items-center justify-center rounded-xl bg-white shadow-[0_2px_8px_rgba(15,23,42,0.18)]"
-            style={{ height: logoBacking, width: logoBacking }}
-          >
-            <div
-              className="flex items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent2 font-extrabold text-white"
-              style={{ height: logoSize, width: logoSize, fontSize: logoSize * 0.55 }}
-            >
-              ₹
-            </div>
-          </div>
-        </>
-      ) : (
-        <span className="text-xs text-muted">Generating QR…</span>
-      )}
+      <div ref={containerRef} />
+      {!uri && <span className="text-xs text-muted">Generating QR…</span>}
     </div>
   );
 }
