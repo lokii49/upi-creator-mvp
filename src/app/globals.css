@@ -1,22 +1,23 @@
 @import "tailwindcss";
 
 /*
-  Buy Me a Coffee's own visual language, by explicit request: signature
-  yellow, bold black outlines, hard offset "sticker" shadows (no blur —
-  a flat drop, like a comic panel), rounded-full pill buttons, playful
-  rounded type. Not vintage, not subtle — bright and friendly.
+  Clean and minimal, by explicit request after two rejected bolder
+  directions (vintage-receipt, then loud BMC-cartoon). No signature
+  motif this time — precision in spacing/type/color instead. One quiet
+  accent (amber, a restrained nod to "coffee" — never a full-bleed
+  background), soft borders, soft shadows, generous whitespace.
 */
 :root {
-  --ink: #172026;
-  --cream: #fffaf0;
-  --card: #ffffff;
-  --yellow: #ffdd00;
-  --yellow-dark: #f0cf00;
-  --stamp: #1a9c5c;
-  --muted: #6b7280;
-  --border: var(--ink);
+  --ink: #0f172a;
+  --muted: #64748b;
+  --bg: #ffffff;
+  --surface: #faf9f7;
+  --border: #e7e3dc;
+  --accent: #b45309;
+  --accent-soft: #fef3e2;
+  --success: #15803d;
 
-  --background: var(--cream);
+  --background: var(--bg);
   --foreground: var(--ink);
 }
 
@@ -24,14 +25,14 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-ink: var(--ink);
-  --color-cream: var(--cream);
-  --color-card: var(--card);
-  --color-yellow: var(--yellow);
-  --color-yellow-dark: var(--yellow-dark);
-  --color-stamp: var(--stamp);
   --color-muted: var(--muted);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
 
-  --font-display: var(--font-display);
   --font-body: var(--font-body);
 }
 
@@ -39,18 +40,4 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
-}
-
-/* Flat, hard-edged "sticker" shadow — no blur — the defining BMC touch.
-   .shadow-pop-sm/lg control the offset; .shadow-pop-press is the
-   pressed-down state on :active for tappable elements. */
-.shadow-pop {
-  box-shadow: 4px 4px 0 0 var(--ink);
-}
-.shadow-pop-lg {
-  box-shadow: 6px 6px 0 0 var(--ink);
-}
-.shadow-pop-press:active {
-  box-shadow: 2px 2px 0 0 var(--ink);
-  transform: translate(2px, 2px);
 }

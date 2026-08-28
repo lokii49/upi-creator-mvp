@@ -12,11 +12,11 @@ import { inputClass, primaryButtonClass, eyebrowClass } from "@/lib/ui";
 
 export default function RegisterPage() {
   return (
-    <main className="min-h-screen bg-yellow flex items-start justify-center">
-      <div className="w-full max-w-md px-4 py-14 space-y-6">
+    <main className="min-h-screen bg-surface flex items-start justify-center">
+      <div className="w-full max-w-md px-4 py-16 space-y-6">
         <div className="text-center space-y-1.5">
           <p className={eyebrowClass}>new page</p>
-          <h1 className="font-display text-4xl font-semibold text-ink">
+          <h1 className="text-2xl font-semibold text-ink tracking-tight">
             Create your support page
           </h1>
         </div>
@@ -82,7 +82,7 @@ function ProfileForm({ user }: { user: User }) {
   return (
     <form
       onSubmit={createPage}
-      className="space-y-4 rounded-2xl border-2 border-ink bg-card shadow-pop p-6"
+      className="space-y-4 rounded-xl border border-border bg-bg p-6"
     >
       <div>
         <label className="text-xs text-muted">
@@ -92,7 +92,7 @@ function ProfileForm({ user }: { user: User }) {
             placeholder="yourname"
             value={slug}
             onChange={(e) => setSlug(e.target.value.toLowerCase())}
-            className="inline w-40 rounded-lg border-2 border-ink bg-card px-2 py-1 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-yellow"
+            className="inline w-40 rounded-lg border border-border bg-bg px-2 py-1 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
           />
         </label>
       </div>

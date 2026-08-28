@@ -64,9 +64,8 @@ export function ClaimForm({ creatorSlug, tier, tr }: Props) {
 
   if (status === "done") {
     return (
-      <div className="rounded-2xl border-2 border-ink bg-stamp/10 shadow-pop p-6 text-center space-y-1">
-        <div className="text-3xl">🎉</div>
-        <p className="font-display text-xl font-semibold text-ink">You&apos;re on the list!</p>
+      <div className="rounded-xl border border-success/30 bg-success/5 p-5 text-center space-y-1">
+        <p className="text-sm font-medium text-success">You&apos;re on the list</p>
         <p className="text-sm text-muted">
           The creator will reach out directly by email if there&apos;s a reward for this tier.
         </p>
@@ -77,12 +76,14 @@ export function ClaimForm({ creatorSlug, tier, tr }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-2xl border-2 border-ink bg-card shadow-pop p-5"
+      className="space-y-4 rounded-xl border border-border bg-bg p-5"
     >
-      <p className="font-display text-sm font-semibold text-ink">Claim your support</p>
-      <p className="text-sm text-muted -mt-2">
-        Already paid (or about to)? Drop your details so the creator knows it was you.
-      </p>
+      <div>
+        <p className="text-sm font-medium text-ink">Claim your support</p>
+        <p className="text-sm text-muted mt-0.5">
+          Already paid (or about to)? Drop your details so the creator knows it was you.
+        </p>
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <input
           required
@@ -119,7 +120,7 @@ export function ClaimForm({ creatorSlug, tier, tr }: Props) {
           type="checkbox"
           checked={publicOptIn}
           onChange={(e) => setPublicOptIn(e.target.checked)}
-          className="mt-1 accent-yellow"
+          className="mt-1 accent-accent"
         />
         <span>Show my name and note on the public supporter feed for this creator.</span>
       </label>
@@ -129,7 +130,7 @@ export function ClaimForm({ creatorSlug, tier, tr }: Props) {
           type="checkbox"
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
-          className="mt-1 accent-yellow"
+          className="mt-1 accent-accent"
         />
         <span>
           I agree to share my name/email/phone with the creator for the purpose of this

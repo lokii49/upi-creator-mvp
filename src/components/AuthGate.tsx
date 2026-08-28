@@ -17,7 +17,7 @@ export function AuthGate({
   if (step === "authed" && user) return <>{children(user)}</>;
 
   return (
-    <div className="rounded-2xl border-2 border-ink bg-card shadow-pop p-6">
+    <div className="rounded-xl border border-border bg-bg p-6">
       {step === "email" && (
         <form onSubmit={sendOtp} className="space-y-3">
           <p className="text-sm text-muted">

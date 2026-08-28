@@ -38,32 +38,28 @@ export function PublicFeed({ creatorSlug }: { creatorSlug: string }) {
 
   return (
     <div className="space-y-3">
-      <p className="font-display text-sm font-semibold text-ink">Recent supporters</p>
+      <p className="text-sm font-medium text-ink">Recent supporters</p>
 
       {!entries && <p className="text-sm text-muted py-4">Loading…</p>}
 
       {entries?.length === 0 && (
-        <p className="text-sm text-muted py-4">No supporters yet — be the first ☕</p>
+        <p className="text-sm text-muted py-4">No supporters yet — be the first.</p>
       )}
 
       {entries && entries.length > 0 && (
-        <ul className="space-y-2">
+        <ul className="divide-y divide-border rounded-xl border border-border bg-bg overflow-hidden">
           {entries.map((e) => (
-            <li
-              key={e.id}
-              className="rounded-xl border-2 border-ink bg-card px-4 py-3 flex items-start gap-3"
-            >
+            <li key={e.id} className="px-4 py-3 flex items-start gap-3">
               <div
                 aria-hidden
-                className="flex items-center justify-center rounded-full bg-yellow border-2 border-ink text-sm font-display font-semibold shrink-0"
-                style={{ height: 32, width: 32 }}
+                className="flex items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent shrink-0"
+                style={{ height: 28, width: 28 }}
               >
                 {e.display_name.charAt(0)}
               </div>
               <div className="min-w-0">
                 <p className="text-sm text-ink">
-                  <span className="font-semibold">{e.display_name}</span> bought{" "}
-                  {e.tier_label}
+                  <span className="font-medium">{e.display_name}</span> bought {e.tier_label}
                 </p>
                 {e.note && <p className="text-sm text-muted italic mt-0.5">&ldquo;{e.note}&rdquo;</p>}
               </div>

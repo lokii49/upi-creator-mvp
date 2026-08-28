@@ -74,30 +74,28 @@ function PayPanelInner({
 
   return (
     <div className="space-y-6">
-      {/* BMC-style tap targets: rounded pills, thick border, hard offset
-          shadow that flattens on press — the "buy 1/3 coffees" pattern
-          this whole product borrowed its shape from. */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         {creator.tiers.map((t, i) => {
           const active = i === selected;
           return (
             <button
               key={t.label}
               onClick={() => selectTier(i)}
-              className={`shadow-pop-press rounded-2xl border-2 border-ink px-4 py-4 text-center transition-transform ${
-                active ? "bg-yellow shadow-pop-lg" : "bg-card shadow-pop hover:bg-yellow/30"
+              className={`rounded-xl border px-4 py-3.5 text-left transition ${
+                active
+                  ? "border-accent bg-accent-soft"
+                  : "border-border bg-bg hover:border-ink/20"
               }`}
             >
-              <div className="text-2xl">☕</div>
-              <div className="font-display text-sm font-semibold text-ink mt-1">{t.label}</div>
-              <div className="font-display text-2xl font-semibold text-ink">₹{t.amount}</div>
+              <div className="text-sm text-muted">☕ {t.label}</div>
+              <div className="text-xl font-semibold text-ink">₹{t.amount}</div>
             </button>
           );
         })}
       </div>
 
       {vpaMissing && (
-        <p className="rounded-xl border-2 border-ink bg-yellow/40 p-3 text-sm text-ink">
+        <p className="rounded-lg border border-accent/30 bg-accent-soft p-3 text-sm text-accent">
           ⚠️ This creator&apos;s UPI ID isn&apos;t set yet — the pay link below won&apos;t work
           until it is.
         </p>
@@ -115,8 +113,8 @@ function PayPanelInner({
         the scanning. See advisor note in project history re: "iOS is
         the trap" — this is that trap, observed live.
       */}
-      <div className="rounded-2xl border-2 border-ink bg-card shadow-pop p-6 flex flex-col items-center gap-4">
-        <p className="font-display text-sm font-semibold text-ink">Scan to pay</p>
+      <div className="rounded-xl border border-border bg-bg p-6 flex flex-col items-center gap-4">
+        <p className="text-sm font-medium text-ink">Scan to pay</p>
         {qrDataUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -124,7 +122,7 @@ function PayPanelInner({
             alt="UPI QR code"
             width={200}
             height={200}
-            className="rounded-xl border-2 border-ink"
+            className="rounded-lg border border-border"
           />
         )}
         <p className="text-xs text-muted text-center max-w-[26ch]">
@@ -134,7 +132,7 @@ function PayPanelInner({
         <a
           href={uri}
           onClick={handleTap}
-          className="w-full text-center rounded-full border-2 border-ink py-2 text-sm font-display font-medium text-ink hover:bg-yellow/30 transition"
+          className="w-full text-center rounded-lg border border-border py-2 text-sm text-muted hover:border-ink/30 hover:text-ink transition"
         >
           or tap to pay ₹{tier.amount} directly
         </a>
