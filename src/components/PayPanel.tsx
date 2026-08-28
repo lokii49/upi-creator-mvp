@@ -9,21 +9,26 @@ import { ClaimForm } from "./ClaimForm";
 
 export function PayPanel({ creator }: { creator: Creator }) {
   const [selected, setSelected] = useState(0);
-  // Fresh tr whenever the selected tier changes — one UPI intent = one tr,
-  // per NPCI spec. Not used to precisely correlate to a claim (see
-  // lib/events.ts) — just attached to the claim as loose context.
-  const [tr, setTr] = useState(() => generateTr());
+  // Empty on both server-render (build) and first client render — identical,
+  // so no hydration mismatch. The real tr is generated client-side only,
+  // right after mount (see effect below). Never seed this with useState(()
+  // => generateTr()): that runs during the static build too, baking a
+  // random value into the HTML that won't match what the client generates,
+  // which React flags as a hydration error on the href below.
+  const [tr, setTr] = useState("");
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
 
   const tier = creator.tiers[selected];
-  const uri = buildUpiUri(creator, tier, tr);
+  const uri = tr ? buildUpiUri(creator, tier, tr) : "";
 
   useEffect(() => {
+    setTr(generateTr());
     logEvent(creator.slug, "view");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
+    if (!uri) return;
     let cancelled = false;
     QRCode.toDataURL(uri, { margin: 1, width: 220 }).then((url) => {
       if (!cancelled) setQrDataUrl(url);
