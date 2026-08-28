@@ -7,6 +7,11 @@ import { ClaimForm } from "./ClaimForm";
 
 // Skeleton variant "card" (default): tier picker + QR + tap-link in one
 // unified card. See HeroPayCard for the QR-first variant.
+//
+// Trimmed after checking this at actual phone width (390x844) — the
+// original 2-up tier grid + a caption both above and below the QR
+// pushed the tap-link below the fold. Pills + one collapsed caption
+// bring the whole payment card back above the fold on mobile.
 export function PayPanel({ creator }: { creator: Creator }) {
   const { selected, tier, uri, qrDataUrl, tr, selectTier, handleTap } = usePaySession(creator);
 
@@ -22,63 +27,55 @@ export function PayPanel({ creator }: { creator: Creator }) {
 
   return (
     <div className="space-y-6">
-      <div className={`${cardClass} p-5 sm:p-6 space-y-5`}>
-        <div className="grid grid-cols-2 gap-2.5">
+      <div className={`${cardClass} p-5 flex flex-col items-center gap-4`}>
+        <div className="flex gap-2">
           {creator.tiers.map((t, i) => {
             const active = i === selected;
             return (
               <button
                 key={t.label}
                 onClick={() => selectTier(i)}
-                className={`rounded-2xl border-2 px-4 py-3 text-left transition ${
+                className={`rounded-full px-4 py-1.5 text-sm font-bold transition ${
                   active
-                    ? "border-accent bg-accent-soft"
-                    : "border-border bg-white hover:border-accent/30"
+                    ? "bg-gradient-to-r from-accent to-accent2 text-white shadow-[0_6px_14px_-6px_rgba(99,102,241,0.5)]"
+                    : "border border-border text-muted hover:border-accent/30"
                 }`}
+                title={t.label}
               >
-                <div className="text-xs text-muted">☕ {t.label}</div>
-                <div className={`text-lg font-extrabold ${active ? gradientTextClass : "text-ink"}`}>
-                  ₹{t.amount}
-                </div>
+                ₹{t.amount}
               </button>
             );
           })}
         </div>
 
         {vpaMissing && (
-          <p className="rounded-lg border border-accent/30 bg-accent-soft p-3 text-sm text-accent">
-            ⚠️ This creator&apos;s UPI ID isn&apos;t set yet — the pay link below won&apos;t work
-            until it is.
+          <p className="rounded-lg border border-accent/30 bg-accent-soft p-3 text-sm text-accent w-full text-center">
+            ⚠️ UPI ID isn&apos;t set yet — the pay link below won&apos;t work until it is.
           </p>
         )}
 
-        <div className="flex flex-col items-center gap-3 border-t border-border pt-5">
-          <div
-            className="flex items-center justify-center rounded-xl border border-border"
-            style={{ minHeight: 200, minWidth: 200 }}
-          >
-            {qrDataUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={qrDataUrl} alt="UPI QR code" width={200} height={200} className="rounded-xl" />
-            ) : (
-              <span className="text-xs text-muted">Generating QR…</span>
-            )}
-          </div>
-          <p className="text-xs text-muted text-center max-w-[30ch]">
-            Scan with your UPI app&apos;s built-in scanner (GPay, PhonePe, Paytm, etc.)
-          </p>
-          <a
-            href={uri}
-            onClick={handleTap}
-            className="w-full text-center rounded-full border border-border py-2 text-sm text-muted hover:border-accent/40 hover:text-ink transition"
-          >
-            or tap to pay ₹{tier.amount} directly
-          </a>
-          <p className="text-[11px] text-muted text-center">
-            Tapping may open a different app than you expect on iPhone — if so, use the QR
-            above instead.
-          </p>
+        <div
+          className="flex items-center justify-center rounded-xl border border-border"
+          style={{ minHeight: 190, minWidth: 190 }}
+        >
+          {qrDataUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={qrDataUrl} alt="UPI QR code" width={190} height={190} className="rounded-xl" />
+          ) : (
+            <span className="text-xs text-muted">Generating QR…</span>
+          )}
         </div>
+
+        <a
+          href={uri}
+          onClick={handleTap}
+          className="w-full text-center rounded-full border border-border py-2 text-sm text-muted hover:border-accent/40 hover:text-ink transition"
+        >
+          or tap to pay ₹{tier.amount} directly
+        </a>
+        <p className="text-[11px] text-muted text-center -mt-2">
+          iPhone may open a different app when tapping — scan the QR above if so.
+        </p>
       </div>
 
       <ClaimForm creatorSlug={creator.slug} tier={tier} tr={tr} />

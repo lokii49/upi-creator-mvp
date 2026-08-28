@@ -5,7 +5,6 @@ import { PayPanel } from "@/components/PayPanel";
 import { HeroPayCard } from "@/components/HeroPayCard";
 import { PublicFeed } from "@/components/PublicFeed";
 import { BrandBadge } from "@/components/BrandBadge";
-import { eyebrowClass } from "@/lib/ui";
 
 export const dynamic = "force-dynamic"; // always fetch fresh — a brand new signup must show up with no rebuild
 
@@ -43,8 +42,15 @@ export default async function CreatorPage({
 
   return (
     <main className="min-h-screen bg-surface">
+      {/*
+        Checked at actual phone width (390x844) — the original 128px
+        banner + 88px avatar + eyebrow badge pushed the tap-link below
+        the fold on a real phone, where UPI payments actually happen.
+        Trimmed banner/avatar and dropped the redundant eyebrow badge
+        here (the brand mark still appears on card/hero).
+      */}
       {layout === "banner" && (
-        <div className="bg-gradient-to-br from-accent to-accent2" style={{ height: 128 }} />
+        <div className="bg-gradient-to-br from-accent to-accent2" style={{ height: 72 }} />
       )}
 
       <div className={`mx-auto max-w-lg px-4 pb-10 space-y-6 ${layout === "banner" ? "" : "pt-10"}`}>
@@ -55,18 +61,14 @@ export default async function CreatorPage({
           // stacked blocks. Ring color matches the page background so
           // it reads as a clean cutout against the gradient, not a
           // random white circle.
-          <div className="-mt-12 flex flex-col items-center text-center gap-2">
+          <div className="-mt-8 flex flex-col items-center text-center gap-1.5">
             <div
               aria-hidden
-              className="flex items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent2 text-2xl font-extrabold text-white ring-4 ring-surface shadow-[0_8px_20px_-6px_rgba(15,23,42,0.35)]"
-              style={{ height: 88, width: 88 }}
+              className="flex items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent2 text-lg font-extrabold text-white ring-4 ring-surface shadow-[0_8px_20px_-6px_rgba(15,23,42,0.35)]"
+              style={{ height: 64, width: 64 }}
             >
               {creator.name.charAt(0)}
             </div>
-            <span className={eyebrowClass}>
-              <BrandBadge size={14} />
-              tinyact / support
-            </span>
             <div>
               <h1 className="text-xl font-extrabold text-ink tracking-tight">{creator.name}</h1>
               {creator.bio && <p className="text-sm text-muted max-w-xs mx-auto">{creator.bio}</p>}
