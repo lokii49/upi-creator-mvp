@@ -10,6 +10,7 @@ import { VpaField } from "@/components/VpaField";
 import { TierEditor } from "@/components/TierEditor";
 import { inputClass, primaryButtonClass, eyebrowClass, cardClass } from "@/lib/ui";
 import { BrandBadge } from "@/components/BrandBadge";
+import { CreatorStats } from "@/components/CreatorStats";
 
 export default function DashboardPage() {
   return (
@@ -76,7 +77,12 @@ function CreatorPicker({ user }: { user: User }) {
   }
 
   const creator = creators.find((c) => c.slug === selected) ?? creators[0];
-  return <EditForm creator={creator} />;
+  return (
+    <div className="space-y-4">
+      <CreatorStats slug={creator.slug} />
+      <EditForm creator={creator} />
+    </div>
+  );
 }
 
 function EditForm({ creator }: { creator: Creator }) {
